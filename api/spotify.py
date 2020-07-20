@@ -11,7 +11,9 @@ import random
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_SECRET_ID = os.getenv("SPOTIFY_SECRET_ID")
-REDIRECT_URI = os.getenv("REDIRECT_URI")
+BASE_URL = os.getenv("BASE_URL")
+
+REDIRECT_URI = "{}/callback".format(BASE_URL)
 
 # scope user-read-currently-playing,user-read-recently-played
 SPOTIFY_URL_REFRESH_TOKEN = "https://accounts.spotify.com/api/token"
@@ -19,6 +21,7 @@ SPOTIFY_URL_NOW_PLAYING = "https://api.spotify.com/v1/me/player/currently-playin
 SPOTIFY_URL_RECENTLY_PLAY = "https://api.spotify.com/v1/me/player/recently-played?limit=10"
 
 SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
+SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
 
 
 def get_authorization():
@@ -57,4 +60,41 @@ def refresh_token(refresh_token):
     response = requests.post(SPOTIFY_URL_REFRESH_TOKEN, data=data, headers=headers)
     repsonse_json = response.json()
 
-    return repsonse_json["access_token"]
+    return repsonse_json
+
+
+def get_user_profile(access_token):
+
+    headers = {"Authorization": "Bearer {}".format(access_token)}
+
+    response = requests.get(SPOTIFY_URL_USER_INFO, headers=headers)
+    repsonse_json = response.json()
+
+    return repsonse_json
+
+
+def get_recently_play(access_token):
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.get(SPOTIFY_URL_RECENTLY_PLAY, headers=headers)
+
+    if response.status_code == 204:
+        return {}
+
+    repsonse_json = response.json()
+    return repsonse_json
+
+
+def get_now_playing(access_token):
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = requests.get(SPOTIFY_URL_NOW_PLAYING, headers=headers)
+
+    if response.status_code == 204:
+        return {}
+
+    repsonse_json = response.json()
+    return repsonse_json
+
