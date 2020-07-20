@@ -4,7 +4,7 @@ Create Spotify now playing card on your github profile
 
 ## Connect & Grant Permission
 
-[![spotify-github-profile-login](https://spotify-github-profile.vercel.app/api/login)](/img/btn-spotify.png)
+[<img src="/img/btn-spotify.png">](https://spotify-github-profile.vercel.app/api/login)
 
 ## Example
 
