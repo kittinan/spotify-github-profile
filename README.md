@@ -11,3 +11,7 @@ Running on Vercel serverless function, store data in Firebase
 ## Example
 
 ![spotify-github-profile](/img/example.svg)
+
+## Credit
+
+Inspired by https://github.com/natemoo-re
