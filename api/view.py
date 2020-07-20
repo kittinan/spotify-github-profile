@@ -12,7 +12,7 @@ from time import time
 
 import os
 import json
-import spotify
+from util import spotify
 import random
 import requests
 

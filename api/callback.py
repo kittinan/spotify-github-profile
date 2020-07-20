@@ -10,7 +10,7 @@ import firebase_admin
 
 import os
 import json
-import spotify
+from util import spotify
 
 print("Starting Server")
 

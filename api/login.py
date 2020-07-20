@@ -1,6 +1,6 @@
 from flask import Flask, Response, jsonify, render_template, redirect
 
-import spotify
+from util import spotify
 
 app = Flask(__name__)
 
