@@ -54,7 +54,10 @@ def load_image_b64(url):
     return b64encode(resposne.content).decode("ascii")
 
 
-def make_svg(item, is_now_playing):
+@functools.lru_cache(maxsize=128)
+def make_svg(artist_name, song_name, img, is_now_playing):
+
+    print("make_svg")
 
     height = 445
     num_bar = 75
@@ -67,11 +70,6 @@ def make_svg(item, is_now_playing):
         content_bar = ""
 
     css_bar = generate_css_bar(num_bar)
-
-    img = load_image_b64(item["album"]["images"][1]["url"])
-    artist_name = item["artists"][0]["name"]
-    song_name = item["name"]
-    url = item["external_urls"]["spotify"]
 
     rendered_data = {
         "height": height,
@@ -162,7 +160,11 @@ def catch_all(path):
         item = recent_plays["items"][idx]["track"]
         is_now_playing = False
 
-    svg = make_svg(item, is_now_playing)
+    img = load_image_b64(item["album"]["images"][1]["url"])
+    artist_name = item["artists"][0]["name"]
+    song_name = item["name"]
+
+    svg = make_svg(artist_name, song_name, img, is_now_playing)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
