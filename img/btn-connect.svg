@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <foreignObject width="420" height="80">
+    <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+      <style>
+        div {
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+        }
+
+        .container {
+          background-color: #212121;
+          border-radius: 10px;
+          padding: 10px 10px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .container:hover {
+          background-color: #1db954;
+        }
+
+        .btn {
+          width: 400px;
+          height: 60px
+        }
+
+        .text {
+          float: left;
+          color: #fff;
+          font-weight: bold;
+          font-size: 28px;
+
+          margin-top: 15px;
+        }
+
+        .logo {
+
+          float: left;
+          width: 40px;
+          height: 40px;
+          background-size: cover;
+
+          margin: 10px 20px 0 30px;
+
+          background-image: url('data:image/png;base64,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');
+        }
+      </style>
+
+
+
+      <div class="btn">
+
+        <div class="logo"></div>
+
+        <div class="text">Connect with Spotify</div>
+      </div>
+
+
+
+
+    </div>
+  </foreignObject>
+</svg>

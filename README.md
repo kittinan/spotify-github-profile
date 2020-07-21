@@ -6,27 +6,29 @@ Running on Vercel serverless function, store data in Firebase (store only access
 
 ## Connect & Grant Permission
 
-[<img src="/img/btn-spotify.png">](https://spotify-github-profile.vercel.app/api/login)
+[<img src="/img/btn-connect.svg">](https://spotify-github-profile.vercel.app/api/login)
 
 ## Example
 
 ![spotify-github-profile](/img/example.svg)
 
 ## Running for development
+
 - [Vercel command line](https://vercel.com/download)
 - Create .env file
+
 ```sh
 SPOTIFY_CLIENT_ID='___'
 SPOTIFY_SECRET_ID='____'
 BASE_URL='http://localhost:3000/api'
 FIREBASE='__BASE64_FIREBASE_JSON_FILE__'
 ```
+
 - Run vercel dev
+
 ```
 vercel dev
 ```
-
-
 
 ## Credit
 
