@@ -18,7 +18,7 @@
 
 </head>
 
-<body>
+<body class="">
   <nav class="green-spotify" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">spotify-github-profile</a>
       <ul class="right hide-on-med-and-down">
@@ -36,8 +36,16 @@
       <br><br>
       <h1 class="header center orange-text">Markdown code</h1>
       <div class="row center">
-        <textarea
-          style="width: 500px;height: 100px;">[![spotify-github-profile]({{BASE_URL}}/view?uid={{uid}})](https://github.com/kittinan/spotify-github-profile)</textarea>
+        <div>
+          <textarea id="markdown-code"
+            style="width: 500px;height: 100px; padding: 10px;">[![spotify-github-profile]({{BASE_URL}}/view?uid={{uid}})](https://github.com/kittinan/spotify-github-profile)</textarea>
+        </div>
+
+        <div style="margin-top: 20px; margin-bottom: 20px;">
+          <button class="waves-effect waves-light btn green darken-3" data-clipboard-target="#markdown-code">
+            <i class="material-icons left">content_copy</i> Copy to clipboard
+          </button>
+        </div>
       </div>
 
       <div class="row center">
@@ -47,13 +55,6 @@
       <br><br>
 
     </div>
-  </div>
-
-
-  <div class="container">
-
-
-
   </div>
 
   <footer class="page-footer green-spotify">
@@ -69,6 +70,18 @@
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+
+  <script>
+    var clipboard = new ClipboardJS('.btn');
+    clipboard.on('success', function (e) {
+      M.toast({
+        html: 'Copied!'
+      })
+
+      e.clearSelection();
+    });
+  </script>
 
 </body>
 
