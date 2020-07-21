@@ -138,6 +138,7 @@ def catch_all(path):
         new_token = spotify.refresh_token(refresh_token)
         expired_ts = int(time()) + new_token["expires_in"]
         update_data = {"access_token": new_token["access_token"], "expired_ts": expired_ts}
+        doc_ref = db.collection("users").document(uid)
         doc_ref.update(update_data)
 
         access_token = new_token["access_token"]
