@@ -59,7 +59,7 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
 
     print("make_svg")
 
-    height = 445
+    height = 445 if cover_image else 145
     num_bar = 75
 
     if is_now_playing:
