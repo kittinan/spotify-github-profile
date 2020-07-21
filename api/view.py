@@ -162,7 +162,9 @@ def catch_all(path):
         item = recent_plays["items"][idx]["track"]
         is_now_playing = False
 
-    img = load_image_b64(item["album"]["images"][1]["url"])
+    img = ""
+    if cover_image:
+        img = load_image_b64(item["album"]["images"][1]["url"])
     artist_name = item["artists"][0]["name"]
     song_name = item["name"]
 
