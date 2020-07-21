@@ -20,6 +20,7 @@ firebase_dict = json.loads(b64decode(firebase_config))
 cred = credentials.Certificate(firebase_dict)
 firebase_admin.initialize_app(cred)
 
+db = firestore.client()
 
 app = Flask(__name__)
 
@@ -30,17 +31,14 @@ def catch_all(path):
     code = request.args.get("code")
 
     if code is None:
+        # TODO: no code
         return Response("not ok")
-
-    # print("code: {}".format(code))
 
     token_info = spotify.generate_token(code)
     access_token = token_info["access_token"]
 
     spotify_user = spotify.get_user_profile(access_token)
     user_id = spotify_user["id"]
-
-    db = firestore.client()
 
     doc_ref = db.collection("users").document(user_id)
     doc_ref.set(token_info)

@@ -31,8 +31,6 @@ def get_authorization():
 
 def generate_token(authorization_code):
 
-    print(authorization_code)
-
     data = {
         "grant_type": "authorization_code",
         "redirect_uri": REDIRECT_URI,
@@ -42,7 +40,6 @@ def generate_token(authorization_code):
     headers = {"Authorization": "Basic {}".format(get_authorization())}
 
     response = requests.post(SPOTIFY_URL_GENERATE_TOKEN, data=data, headers=headers)
-    print(response.content)
     repsonse_json = response.json()
 
     return repsonse_json

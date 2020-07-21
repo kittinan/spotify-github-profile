@@ -6,6 +6,7 @@ load_dotenv(find_dotenv())
 
 from firebase_admin import credentials
 from firebase_admin import firestore
+from sys import getsizeof
 import firebase_admin
 
 from time import time
@@ -15,7 +16,7 @@ import json
 from util import spotify
 import random
 import requests
-
+import functools
 
 print("Starting Server")
 
@@ -26,10 +27,12 @@ cred = credentials.Certificate(firebase_dict)
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+CACHE_TOKEN_INFO = {}
 
 app = Flask(__name__)
 
 
+@functools.lru_cache(maxsize=128)
 def generate_css_bar(num_bar=75):
     css_bar = ""
     left = 1
@@ -44,6 +47,7 @@ def generate_css_bar(num_bar=75):
     return css_bar
 
 
+@functools.lru_cache(maxsize=128)
 def load_image_b64(url):
 
     resposne = requests.get(url)
@@ -84,36 +88,54 @@ def make_svg(item, is_now_playing):
     return render_template("spotify.html.j2", **rendered_data)
 
 
+def get_cache_token_info(uid):
+    global CACHE_TOKEN_INFO
+
+    token_info = CACHE_TOKEN_INFO.get(uid, None)
+    return token_info
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
 
-    print("XXX")
+    global CACHE_TOKEN_INFO
+
     uid = request.args.get("uid")
-    print(uid)
 
-    doc_ref = db.collection("users").document(uid)
-    doc = doc_ref.get()
+    # Load token from cache memory
+    token_info = get_cache_token_info(uid)
 
-    if not doc.exists:
-        print("not exist")
-        return Response("not ok")
+    if token_info is None:
+        # Load from firebase
+        print("load token_info from firebase")
 
-    token_info = doc.to_dict()
+        doc_ref = db.collection("users").document(uid)
+        doc = doc_ref.get()
+
+        if not doc.exists:
+            print("not exist")
+            # TODO: show error
+            return Response("not ok")
+
+        token_info = doc.to_dict()
+
+        CACHE_TOKEN_INFO[uid] = token_info
 
     current_ts = int(time())
     access_token = token_info["access_token"]
 
-    # check token expired
+    # Check token expired
     expired_ts = token_info.get("expired_ts")
-    print(current_ts)
-    print(expired_ts)
+    print(current_ts, expired_ts)
     if expired_ts is None or current_ts >= expired_ts:
         # Refresh token
 
+        print("Refresh token")
+
         refresh_token = token_info["refresh_token"]
 
-        print(f"refresh_token : {refresh_token}")
+        # print(f"refresh_token : {refresh_token}")
 
         new_token = spotify.refresh_token(refresh_token)
         expired_ts = int(time()) + new_token["expires_in"]
@@ -122,7 +144,8 @@ def catch_all(path):
 
         access_token = new_token["access_token"]
 
-        print("new token")
+        # Save in memory cache
+        CACHE_TOKEN_INFO[uid] = update_data
 
     data = spotify.get_now_playing(access_token)
     if data:
@@ -143,6 +166,8 @@ def catch_all(path):
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
+
+    print(getsizeof(CACHE_TOKEN_INFO))
 
     return resp
 
