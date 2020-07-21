@@ -41,11 +41,25 @@
     <div class="container">
       <br><br>
       <h2 class="header center orange-text">Markdown code</h2>
+
+      <div class="row center">
+        <div class="row">
+          <div class="col s6 m4">
+            <label>
+              <input type="checkbox" class="filled-in" checked="checked" id="cover-image-checkbox" />
+              <span>Cover Image</span>
+            </label>
+          </div>
+          <div class="col s6 m4"></div>
+          <div class="col s6 m4"></div>
+        </div>
+      </div>
+
       <div class="row center">
         <div class="col s0 m1"></div>
         <div class="col s12 m10">
           <textarea id="markdown-code"
-            style="width: 100%;height: 100px; padding: 10px;">[![spotify-github-profile]({{BASE_URL}}/view?uid={{uid}})](https://github.com/kittinan/spotify-github-profile)</textarea>
+            style="width: 100%;height: 100px; padding: 10px;"></textarea>
         </div>
         <div class="col s0 m1"></div>
       </div>
@@ -59,8 +73,7 @@
       </div>
 
       <div class="row center">
-        <img src="{{BASE_URL}}/view?uid={{uid}}" />
-
+        <img id="example-view" />
       </div>
       <br><br>
 
@@ -81,6 +94,35 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+
+  <script>
+    var uid = "{{uid}}";
+    var viewUrl = "{{BASE_URL}}/view?";
+    var markdownCodeTextArea = $('#markdown-code');
+    var exampleView = $("#example-view");
+    var urlParams = {
+      uid: uid,
+      cover_image: true,
+    };
+
+    function updateUrl() {
+      var viewUrlWithParams = viewUrl + $.param(urlParams, true);
+      exampleView.attr('src', viewUrlWithParams);
+      markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](https://github.com/kittinan/spotify-github-profile)`);
+    }
+
+    updateUrl();
+
+    var coverImageCheckbox = $("#cover-image-checkbox");
+    coverImageCheckbox.change(function() {
+        if(this.checked) {
+          urlParams.cover_image = true;
+        } else {
+          urlParams.cover_image = false;
+        }
+        updateUrl();
+    });
+  </script>
 
   <script>
     var clipboard = new ClipboardJS('.btn');
