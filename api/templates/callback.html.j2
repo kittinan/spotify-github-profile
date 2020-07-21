@@ -1,3 +1,75 @@
-<textarea style="width: 500px;height: 100px;">[![spotify-github-profile]({{BASE_URL}}/view?uid={{uid}})](https://github.com/kittinan/spotify-github-profile)
+<!DOCTYPE html>
+<html lang="en">
 
-</textarea>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+  <title>spotify-github-profile</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+  <style>
+    .green-spotify {
+      background-color: #1db954 !important;
+    }
+  </style>
+
+</head>
+
+<body>
+  <nav class="green-spotify" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">spotify-github-profile</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="https://github.com/kittinan/spotify-github-profile" target="_BLANK">Github</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="https://github.com/kittinan/spotify-github-profile" target="_BLANK">Github</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">Markdown code</h1>
+      <div class="row center">
+        <textarea
+          style="width: 500px;height: 100px;">[![spotify-github-profile]({{BASE_URL}}/view?uid={{uid}})](https://github.com/kittinan/spotify-github-profile)</textarea>
+      </div>
+
+      <div class="row center">
+        <img src="{{BASE_URL}}/view?uid={{uid}}" />
+
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+
+
+
+  </div>
+
+  <footer class="page-footer green-spotify">
+    <div class="footer-copyright">
+      <div class="container center">
+        Made with <i class="material-icons red-text">favorite</i></i> by <a class="grey-text text-darken-4"
+          href="https://github.com/kittinan/spotify-github-profile" target="_BLANK">spotify-github-profile</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+
+</html>
