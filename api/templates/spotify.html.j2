@@ -95,11 +95,14 @@
             <div id='bars'>
                 {{content_bar|safe}}
             </div>
+
+            {% if cover_image %}
             <a href="{}" target="_BLANK">
                 <center>
                         <img src="data:image/png;base64, {{img}}" width="300" height="300" class="cover" />
                 </center>
             </a>
+            {% endif %}
 
             {% else %}
                 <div class="playing not-play">Nothing playing on Spotify</div>
