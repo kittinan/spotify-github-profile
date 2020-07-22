@@ -165,7 +165,8 @@ def catch_all(path):
     img = ""
     if cover_image:
         img = load_image_b64(item["album"]["images"][1]["url"])
-    artist_name = item["artists"][0]["name"]
+
+    artist_name = item["artists"][0]["name"].replace("&", "&amp;")
     song_name = item["name"].replace("&", "&amp;")
 
     svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image)
