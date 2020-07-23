@@ -17,8 +17,8 @@ REDIRECT_URI = "{}/callback".format(BASE_URL)
 
 # scope user-read-currently-playing,user-read-recently-played
 SPOTIFY_URL_REFRESH_TOKEN = "https://accounts.spotify.com/api/token"
-SPOTIFY_URL_NOW_PLAYING = "https://api.spotify.com/v1/me/player/currently-playing"
-SPOTIFY_URL_RECENTLY_PLAY = "https://api.spotify.com/v1/me/player/recently-played?limit=10"
+SPOTIFY_URL_NOW_PLAYING = "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track%2Cepisode"
+SPOTIFY_URL_RECENTLY_PLAY = "https://api.spotify.com/v1/me/player/recently-played?limit=10&additional_types=track%2Cepisode"
 
 SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
