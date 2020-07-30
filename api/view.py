@@ -165,7 +165,6 @@ def catch_all(path):
     img = ""
     if cover_image:
         img = load_image_b64(item["album"]["images"][1]["url"])
-
     artist_name = item["artists"][0]["name"].replace("&", "&amp;")
     song_name = item["name"].replace("&", "&amp;")
 
