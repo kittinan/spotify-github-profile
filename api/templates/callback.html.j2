@@ -44,14 +44,18 @@
 
       <div class="row center">
         <div class="row">
-          <div class="col s6 m4">
+          <div class="col s12 m6">
             <label>
               <input type="checkbox" class="filled-in" checked="checked" id="cover-image-checkbox" />
               <span>Cover Image</span>
             </label>
           </div>
-          <div class="col s6 m4"></div>
-          <div class="col s6 m4"></div>
+          <div class="col s12 m6">
+            <label>
+              <input type="checkbox" class="filled-in" id="open-song-checkbox" />
+              <span>Open in Spotify</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -104,23 +108,29 @@
       uid: uid,
       cover_image: true,
     };
+    var openSong = false;
 
     function updateUrl() {
       var viewUrlWithParams = viewUrl + $.param(urlParams, true);
+      var url = "https://github.com/kittinan/spotify-github-profile";
+      if (openSong) {
+        url = viewUrl + $.param({uid: uid, redirect: true}, true);;
+      }
+
       exampleView.attr('src', viewUrlWithParams);
-      markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](https://github.com/kittinan/spotify-github-profile)`);
+      markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](${url})`);
     }
 
     updateUrl();
 
-    var coverImageCheckbox = $("#cover-image-checkbox");
-    coverImageCheckbox.change(function() {
-        if(this.checked) {
-          urlParams.cover_image = true;
-        } else {
-          urlParams.cover_image = false;
-        }
-        updateUrl();
+    $("#cover-image-checkbox").change(function() {
+      urlParams.cover_image = this.checked;
+      updateUrl();
+    });
+
+    $("#open-song-checkbox").change(function() {
+      openSong = this.checked;
+      updateUrl();
     });
   </script>
 
