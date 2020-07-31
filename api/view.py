@@ -90,6 +90,13 @@ def get_cache_token_info(uid):
     global CACHE_TOKEN_INFO
 
     token_info = CACHE_TOKEN_INFO.get(uid, None)
+
+    if type(token_info) == dict:
+        current_ts = int(time())
+        expired_ts = token_info.get("expired_ts")
+        if expired_ts is None or current_ts >= expired_ts:
+            return None
+
     return token_info
 
 
