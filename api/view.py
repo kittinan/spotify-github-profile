@@ -66,7 +66,7 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
         title_text = "Now playing"
         content_bar = "".join(["<div class='bar'></div>" for i in range(num_bar)])
     else:
-        title_text = "Recently play"
+        title_text = "Recently played"
         content_bar = ""
 
     css_bar = generate_css_bar(num_bar)
