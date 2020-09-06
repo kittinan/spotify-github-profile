@@ -157,6 +157,7 @@ def get_song_info(uid):
     data = spotify.get_now_playing(access_token)
     if data:
         item = data["item"]
+        item["currently_playing_type"] = data["currently_playing_type"]
         is_now_playing = True
     else:
         recent_plays = spotify.get_recently_play(access_token)
@@ -172,17 +173,30 @@ def get_song_info(uid):
 @app.route("/<path:path>")
 def catch_all(path):
     uid = request.args.get("uid")
-    cover_image = request.args.get("cover_image", default='true') == 'true'
-    is_redirect = request.args.get("redirect", default='false') == 'true'
+    cover_image = request.args.get("cover_image", default="true") == "true"
+    is_redirect = request.args.get("redirect", default="false") == "true"
 
     item, is_now_playing = get_song_info(uid)
 
     if is_redirect:
         return redirect(item["uri"], code=302)
 
-    img = load_image_b64(item["album"]["images"][1]["url"]) if cover_image else ""
-    artist_name = item["artists"][0]["name"].replace("&", "&amp;")
-    song_name = item["name"].replace("&", "&amp;")
+    img = ""
+    if cover_image:
+
+        if item["currently_playing_type"] == "track":
+            img = load_image_b64(item["album"]["images"][1]["url"])
+        elif item["currently_playing_type"] == "episode":
+            img = load_image_b64(item["images"][1]["url"])
+
+    # Find artist_name and song_name
+    if item["currently_playing_type"] == "track":
+        artist_name = item["artists"][0]["name"].replace("&", "&amp;")
+        song_name = item["name"].replace("&", "&amp;")
+
+    elif item["currently_playing_type"] == "episode":
+        artist_name = item["show"]["publisher"].replace("&", "&amp;")
+        song_name = item["name"].replace("&", "&amp;")
 
     svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image)
 
