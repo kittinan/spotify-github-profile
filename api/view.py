@@ -164,6 +164,7 @@ def get_song_info(uid):
         size_recent_play = len(recent_plays["items"])
         idx = random.randint(0, size_recent_play - 1)
         item = recent_plays["items"][idx]["track"]
+        item["currently_playing_type"] = "track"
         is_now_playing = False
 
     return item, is_now_playing
@@ -178,23 +179,25 @@ def catch_all(path):
 
     item, is_now_playing = get_song_info(uid)
 
+    currently_playing_type = item.get("currently_playing_type", "track")
+
     if is_redirect:
         return redirect(item["uri"], code=302)
 
     img = ""
     if cover_image:
 
-        if item["currently_playing_type"] == "track":
+        if currently_playing_type == "track":
             img = load_image_b64(item["album"]["images"][1]["url"])
-        elif item["currently_playing_type"] == "episode":
+        elif currently_playing_type == "episode":
             img = load_image_b64(item["images"][1]["url"])
 
     # Find artist_name and song_name
-    if item["currently_playing_type"] == "track":
+    if currently_playing_type == "track":
         artist_name = item["artists"][0]["name"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    elif item["currently_playing_type"] == "episode":
+    elif currently_playing_type == "episode":
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
