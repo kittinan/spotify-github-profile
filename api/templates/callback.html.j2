@@ -44,16 +44,22 @@
 
       <div class="row center">
         <div class="row">
-          <div class="col s12 m6">
+          <div class="col s12 m4">
             <label>
               <input type="checkbox" class="filled-in" checked="checked" id="cover-image-checkbox" />
               <span>Cover Image</span>
             </label>
           </div>
-          <div class="col s12 m6">
+          <div class="col s12 m4">
             <label>
               <input type="checkbox" class="filled-in" id="open-song-checkbox" />
               <span>Open in Spotify</span>
+            </label>
+          </div>
+          <div class="col s12 m4">
+            <label>
+              <input type="checkbox" class="filled-in" id="org-mode-checkbox" />
+              <span>Org-Mode Snippet</span>
             </label>
           </div>
         </div>
@@ -101,7 +107,6 @@
 
   <script>
     var uid = "{{uid}}";
-    var viewUrl = "{{BASE_URL}}/view?";
     var markdownCodeTextArea = $('#markdown-code');
     var exampleView = $("#example-view");
     var urlParams = {
@@ -109,8 +114,10 @@
       cover_image: true,
     };
     var openSong = false;
+    var orgMode = false;
 
     function updateUrl() {
+      var viewUrl = `{{BASE_URL}}/view${orgMode ? '.svg': ''}?`;
       var viewUrlWithParams = viewUrl + $.param(urlParams, true);
       var url = "https://github.com/kittinan/spotify-github-profile";
       if (openSong) {
@@ -118,7 +125,7 @@
       }
 
       exampleView.attr('src', viewUrlWithParams);
-      markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](${url})`);
+      markdownCodeTextArea.text(orgMode ? `[[${url}][${viewUrlWithParams})]]`: `[![spotify-github-profile](${viewUrlWithParams})](${url})`);
     }
 
     updateUrl();
@@ -130,6 +137,11 @@
 
     $("#open-song-checkbox").change(function() {
       openSong = this.checked;
+      updateUrl();
+    });
+
+    $("#org-mode-checkbox").change(function() {
+      orgMode = this.checked;
       updateUrl();
     });
   </script>
