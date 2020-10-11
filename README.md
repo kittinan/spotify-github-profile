@@ -14,23 +14,56 @@ Running on Vercel serverless function, store data in Firebase (store only access
 
 ![spotify-github-profile](/img/example.svg)
 
-## Running for development
+## Running for development locally
 
-- [Vercel command line](https://vercel.com/download)
-- Create .env file
+To develop locally, you need:
+
+- A fork of this project as your repository
+- A Vercel project connected with the forked repository
+- A Firebase project with Cloud Firestore setup
+- A Spotify developer account
+
+### Setting up Vercel
+
+- [Create a new Vercel project by importing](https://vercel.com/import) the forked project on GitHub
+
+### Setting up Firebase
+
+- Create [a new Firebase project](https://console.firebase.google.com/u/0/)
+- Create a new Cloud Firestore in the project
+- Download configuration JSON file from _Project settings_ > _Service accounts_ > _Generate new private key_
+- Convert private key content as BASE64
+  - You can use Encode/Decode extension in VSCode to do so
+  - This key will be used in step explained below
+
+### Setting up Spotify dev
+
+- Login to [developer.spotify.com](https://developer.spotify.com/dashboard/applications)
+- Create a new project
+- Edit settings to add _Redirect URIs_
+  - add `http://localhost:3000/api/callback`
+
+### Running locally
+
+- Install [Vercel command line](https://vercel.com/download) with `npm i -g vercel`
+- Create `.env` file at the root of the project and paste your keys in `SPOTIFY_CLIENT_ID`, `SPOTIFY_SECRET_ID`, and `FIREBASE`
 
 ```sh
-SPOTIFY_CLIENT_ID='___'
-SPOTIFY_SECRET_ID='____'
 BASE_URL='http://localhost:3000/api'
+SPOTIFY_CLIENT_ID='____'
+SPOTIFY_SECRET_ID='____'
 FIREBASE='__BASE64_FIREBASE_JSON_FILE__'
 ```
 
-- Run vercel dev
+- Run `vercel dev`
 
+```sh
+$ vercel dev
+Vercel CLI 20.1.2 dev (beta) — https://vercel.com/feedback
+> Ready! Available at http://localhost:3000
 ```
-vercel dev
-```
+
+- Now try to access http://localhost:3000/api/login
 
 ## Credit
 
