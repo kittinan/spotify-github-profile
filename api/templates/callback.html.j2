@@ -21,6 +21,17 @@
         text-align: center;
       }
     }
+
+    {# sticky footer #}
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .section.no-pad-bot {
+      flex: 1 0 auto;
+    }
   </style>
 
 </head>
