@@ -6,8 +6,7 @@ from view import generate_css_bar, load_image_b64
 app = Flask(__name__)
 
 
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
-
+def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
     print("make_svg")
 
     height = 445 if cover_image else 145
@@ -34,7 +33,14 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
         "cover_image": cover_image,
     }
 
-    return render_template("spotify.html.j2", **rendered_data)
+    if theme == 'compact':
+      return render_template("spotify.compact.html.j2", **rendered_data)
+    elif theme == 'natemoo-re':
+      return render_template("spotify.natemoo-re.html.j2", **rendered_data)
+    elif theme == 'novatorem':
+      return render_template("spotify.novatorem.html.j2", **rendered_data)
+    else:
+      return render_template("spotify.html.j2", **rendered_data)
 
 
 @app.route("/", defaults={"path": ""})
@@ -48,8 +54,9 @@ def catch_all(path):
     img = load_image_b64(img_url)
     is_now_playing = True
     cover_image = True
+    theme = 'default'
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image)
+    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
