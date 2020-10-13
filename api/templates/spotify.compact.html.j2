@@ -1,0 +1,82 @@
+<svg width="320" height="{{height}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <foreignObject width="320" height="{{height}}">
+    <style>
+      div {
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+      }
+
+      .container {
+        background-color: #121212;
+        border-radius: 10px;
+
+        padding: 10px 10px
+      }
+
+      .not-play {
+        color: #ff1616;
+        text-align: center;
+      }
+
+      .text-container {
+        margin: 5px 0 15px;
+      }
+
+      .artist {
+        color: #fff;
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+
+        margin-bottom: 5px;
+      }
+
+      .song {
+        color: #b3b3b3;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .logo {
+        margin-left: 5px;
+      }
+
+      .cover {
+        border-radius: 5px;
+      }
+
+      @keyframes sound {
+        0% {
+          opacity: .35;
+          height: 3px;
+        }
+
+        100% {
+          opacity: 1;
+          height: 28px;
+        }
+      }
+
+      {{css_bar|safe}}
+    </style>
+    <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+      {% if song_name %}
+        <div class="text-container">
+          <div class="artist">{{artist_name}}</div>
+          <div class="song">{{song_name}}</div>
+        </div>
+
+        {% if cover_image %}
+          <a href="{}" target="_BLANK">
+            <center>
+              <img src="data:image/png;base64, {{img}}" width="300" height="300" class="cover" />
+            </center>
+          </a>
+        {% endif %}
+
+      {% else %}
+        <div class="playing not-play">Nothing playing on Spotify</div>
+      {% endif %}
+
+    </div>
+  </foreignObject>
+</svg>

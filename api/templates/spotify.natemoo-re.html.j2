@@ -1,0 +1,110 @@
+<svg width="320" height="{{height}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <foreignObject width="320" height="{{height}}">
+    <style>
+      div {
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+      }
+
+      .container {
+        display: flex;
+        align-items: center;
+
+        border-radius: 10px;
+
+        padding: 10px 10px
+      }
+
+      .cover-link {
+        height: 64px;
+      }
+
+      .cover {
+        border-radius: 1px;
+
+        margin-right: 10px;
+      }
+
+      .playing {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: #53b14f;
+        font-weight: bold;
+        text-align: center;
+
+        margin-bottom: 8px;
+      }
+
+      .not-play {
+        color: #ff1616;
+        text-align: center;
+
+        margin-bottom: 0;
+      }
+
+      .artist {
+        color: #121212;
+        font-weight: 500;
+        font-size: 14px;
+
+        margin-bottom: 3px;
+      }
+
+      .song {
+        color: #212122;
+        font-size: 14px;
+
+        margin-bottom: 18px;
+      }
+
+      #bars {
+        position: absolute;
+        height: 6px;
+        width: 220px;
+        overflow: hidden;
+        margin: -6px 0 0 0px;
+      }
+
+      .bar {
+        background: #53b14f;
+        bottom: 1px;
+        height: 3px;
+        position: absolute;
+        width: 3px;
+        animation: sound 0ms -800ms linear infinite alternate;
+      }
+
+      @keyframes sound {
+        0% {
+          opacity: .35;
+          height: 3px;
+        }
+
+        100% {
+          opacity: 1;
+          height: 6px;
+        }
+      }
+
+      {{css_bar|safe}}
+    </style>
+    <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+      {% if song_name %}
+        {% if cover_image %}
+          <a href="{}" target="_BLANK" class="cover-link">
+            <img src="data:image/png;base64, {{img}}" width="64" height="64" class="cover" />
+          </a>
+        {% endif %}
+        <div class="text-container">
+          <div class="artist">{{artist_name}}</div>
+          <div class="song">{{song_name}}</div>
+          <div id='bars'>{{content_bar|safe}}</div>
+        </div>
+      {% else %}
+        <div class="playing not-play">Nothing playing on Spotify</div>
+      {% endif %}
+
+    </div>
+  </foreignObject>
+</svg>
