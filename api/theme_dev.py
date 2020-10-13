@@ -33,12 +33,8 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
         "cover_image": cover_image,
     }
 
-    if theme == 'compact':
-      return render_template("spotify.compact.html.j2", **rendered_data)
-    elif theme == 'natemoo-re':
-      return render_template("spotify.natemoo-re.html.j2", **rendered_data)
-    elif theme == 'novatorem':
-      return render_template("spotify.novatorem.html.j2", **rendered_data)
+    if theme != 'default':
+      return render_template(f"spotify.{theme}.html.j2", **rendered_data)
     else:
       return render_template("spotify.html.j2", **rendered_data)
 
@@ -48,7 +44,7 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
 def catch_all(path):
 
     artist_name = "Spotify Github Profile"
-    song_name = "Revolution"
+    song_name = "Revolution with very long text - ft. someone"
 
     img_url = "https://avatars1.githubusercontent.com/u/144775?s=300&v=4"
     img = load_image_b64(img_url)

@@ -67,6 +67,38 @@
         margin-bottom: 28px;
       }
 
+      .song-container {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .song-container::before {
+        content: '\00a0';
+      }
+
+      .scrolling {
+        {# animation: marquee 8s linear infinite;
+        display: block;
+        min-width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        white-space: nowrap; #}
+
+        animation: marquee 8s linear infinite;
+        display: inline-block;
+        padding-right: 20px;
+      }
+
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+
       #bars {
         position: absolute;
         height: 14px;
@@ -107,7 +139,11 @@
         {% endif %}
         <div class="text-container">
           <div class="artist">{{artist_name}}</div>
-          <div class="song">{{song_name}}</div>
+          <div class="song-container">
+            <div class="song scrolling">{{song_name}}</div>
+            <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
+            <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
+          </div>
           <div id='bars'>{{content_bar|safe}}</div>
         </div>
       {% else %}
