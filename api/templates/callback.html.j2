@@ -21,6 +21,35 @@
         text-align: center;
       }
     }
+
+    .page-footer {
+      padding-top: 0;
+    }
+
+    .page-footer .footer-copyright {
+      padding: 20px 0 16px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .footer-content > i {
+      margin: 0 5px;
+    }
+
+    {# sticky footer #}
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .section.no-pad-bot {
+      flex: 1 0 auto;
+    }
   </style>
 
 </head>
@@ -92,9 +121,17 @@
 
   <footer class="page-footer green-spotify">
     <div class="footer-copyright">
-      <div class="container center">
-        Made with <i class="material-icons red-text">favorite</i></i> by <a class="grey-text text-darken-4"
-          href="https://github.com/kittinan/spotify-github-profile" target="_BLANK">spotify-github-profile</a>
+      <div class="container center footer-content">
+        <span>Made with</span>
+        <i class="material-icons red-text">favorite</i></i>
+        <span>
+          by
+          <a class="grey-text text-darken-4"
+            href="https://github.com/kittinan/spotify-github-profile"
+            target="_BLANK">
+            spotify-github-profile
+          </a>
+        <span>
       </div>
     </div>
   </footer>
