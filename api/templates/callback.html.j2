@@ -94,6 +94,18 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="input-field col s12 m6 offset-m3">
+          <select>
+            <option value="default" selected>default</option>
+            <option value="compact">compact</option>
+            <option value="natemoo-re">natemoo-re</option>
+            <option value="novatorem">novatorem</option>
+          </select>
+          <label>Choose theme</label>
+        </div>
+      </div>
+
       <div class="row center">
         <div class="col s0 m1"></div>
         <div class="col s12 m10">
@@ -149,6 +161,7 @@
     var urlParams = {
       uid: uid,
       cover_image: true,
+      theme: 'default',
     };
     var openSong = false;
     var orgMode = false;
@@ -180,6 +193,15 @@
     $("#org-mode-checkbox").change(function() {
       orgMode = this.checked;
       updateUrl();
+    });
+
+    $('select').change(function() {
+      urlParams.theme = this.value;
+      updateUrl();
+    });
+
+    $(document).ready(function(){
+      $('select').formSelect();
     });
   </script>
 

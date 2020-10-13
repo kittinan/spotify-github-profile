@@ -55,12 +55,29 @@ def load_image_b64(url):
 
 
 @functools.lru_cache(maxsize=128)
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
+def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
 
     print("make_svg")
 
-    height = 445 if cover_image else 145
+    height = 0
     num_bar = 75
+
+    if theme == 'compact':
+      if cover_image:
+        height = 400
+      else:
+        height = 100
+    elif theme == 'natemoo-re':
+        height = 84
+        num_bar = 100
+    elif theme == 'novatorem':
+        height = 100
+        num_bar = 100
+    else:
+      if cover_image:
+        height = 445
+      else:
+        height = 145
 
     if is_now_playing:
         title_text = "Now playing"
@@ -83,7 +100,14 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image):
         "cover_image": cover_image,
     }
 
-    return render_template("spotify.html.j2", **rendered_data)
+    if theme == 'compact':
+      return render_template("spotify.compact.html.j2", **rendered_data)
+    elif theme == 'natemoo-re':
+      return render_template("spotify.natemoo-re.html.j2", **rendered_data)
+    elif theme == 'novatorem':
+      return render_template("spotify.novatorem.html.j2", **rendered_data)
+    else:
+      return render_template("spotify.html.j2", **rendered_data)
 
 
 def get_cache_token_info(uid):
@@ -176,6 +200,7 @@ def catch_all(path):
     uid = request.args.get("uid")
     cover_image = request.args.get("cover_image", default="true") == "true"
     is_redirect = request.args.get("redirect", default="false") == "true"
+    theme = request.args.get("theme", default="default")
 
     item, is_now_playing = get_song_info(uid)
 
@@ -201,7 +226,7 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image)
+    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
