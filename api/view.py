@@ -100,12 +100,8 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
         "cover_image": cover_image,
     }
 
-    if theme == 'compact':
-      return render_template("spotify.compact.html.j2", **rendered_data)
-    elif theme == 'natemoo-re':
-      return render_template("spotify.natemoo-re.html.j2", **rendered_data)
-    elif theme == 'novatorem':
-      return render_template("spotify.novatorem.html.j2", **rendered_data)
+    if theme != 'default':
+      return render_template(f"spotify.{theme}.html.j2", **rendered_data)
     else:
       return render_template("spotify.html.j2", **rendered_data)
 
