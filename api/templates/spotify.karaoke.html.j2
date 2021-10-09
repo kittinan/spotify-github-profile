@@ -7,8 +7,7 @@
       }
 
       .container {
-        background-color: #121212;
-        border-radius: 10px;
+        background-color: #868686;
 
         padding: 10px 10px
       }
@@ -23,17 +22,21 @@
       }
 
       .artist {
-        color: #fff;
-        font-weight: bold;
-        font-size: 20px;
+        -webkit-text-stroke: 0.8px #efefef;
+        text-shadow: 0px 2px #000;        
+        color: #ff3333;
+        font-weight: bolder;
+        font-size: 24px;
         text-align: center;
-
-        margin-bottom: 5px;
       }
 
       .song {
-        color: #b3b3b3;
-        font-size: 16px;
+        -webkit-text-stroke: 0.8px #f7f7f7;
+        text-shadow: 0px 2px #000;
+        font-weight: bolder;
+        color: #0000de;
+        font-weight: bolder;
+        font-size: 24px;
         text-align: center;
       }
 
@@ -42,7 +45,7 @@
       }
 
       .cover {
-        border-radius: 5px;
+        
       }
 
       @keyframes sound {
@@ -62,9 +65,8 @@
     <div xmlns="http://www.w3.org/1999/xhtml" class="container">
       {% if song_name %}
         <div class="text-container">
-          <div>Karaoke</div>
-          <div class="artist">{{artist_name}}</div>
           <div class="song">{{song_name}}</div>
+          <div class="artist">{{artist_name}}</div>
         </div>
 
         {% if cover_image %}
