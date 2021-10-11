@@ -7,8 +7,6 @@ app = Flask(__name__)
 
 
 def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
-    print("make_svg")
-
     height = 445 if cover_image else 145
     num_bar = 75
 

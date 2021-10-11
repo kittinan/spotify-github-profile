@@ -140,7 +140,6 @@ def get_access_token(uid):
 
     # Check token expired
     expired_ts = token_info.get("expired_ts")
-    print(current_ts, expired_ts)
     if expired_ts is None or current_ts >= expired_ts:
         # Refresh token
         refresh_token = token_info["refresh_token"]
