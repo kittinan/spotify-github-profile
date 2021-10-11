@@ -208,7 +208,7 @@
     });
 
     $('#bar_color').change(function() {
-      urlParams.bar_color = this.value;
+      urlParams.bar_color = this.value.substring(1);
       updateUrl();
     });
 

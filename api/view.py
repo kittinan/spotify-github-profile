@@ -185,7 +185,7 @@ def catch_all(path):
     cover_image = request.args.get("cover_image", default="true") == "true"
     is_redirect = request.args.get("redirect", default="false") == "true"
     theme = request.args.get("theme", default="default")
-    bar_color = request.args.get("bar_color", default="#53b14f")
+    bar_color = request.args.get("bar_color", default="53b14f")
 
     item, is_now_playing = get_song_info(uid)
 
