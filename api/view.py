@@ -55,10 +55,7 @@ def load_image_b64(url):
 
 
 @functools.lru_cache(maxsize=128)
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
-
-    print("make_svg")
-
+def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color):
     height = 0
     num_bar = 75
 
@@ -98,12 +95,10 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme):
         "song_name": song_name,
         "img": img,
         "cover_image": cover_image,
+        'bar_color': bar_color,
     }
 
-    if theme != 'default':
-      return render_template(f"spotify.{theme}.html.j2", **rendered_data)
-    else:
-      return render_template("spotify.html.j2", **rendered_data)
+    return render_template(f"spotify.{theme}.html.j2", **rendered_data)
 
 
 def get_cache_token_info(uid):
@@ -128,8 +123,6 @@ def get_access_token(uid):
 
     if token_info is None:
         # Load from firebase
-        print("load token_info from firebase")
-
         doc_ref = db.collection("users").document(uid)
         doc = doc_ref.get()
 
@@ -150,12 +143,7 @@ def get_access_token(uid):
     print(current_ts, expired_ts)
     if expired_ts is None or current_ts >= expired_ts:
         # Refresh token
-
-        print("Refresh token")
-
         refresh_token = token_info["refresh_token"]
-
-        # print(f"refresh_token : {refresh_token}")
 
         new_token = spotify.refresh_token(refresh_token)
         expired_ts = int(time()) + new_token["expires_in"]
@@ -197,6 +185,7 @@ def catch_all(path):
     cover_image = request.args.get("cover_image", default="true") == "true"
     is_redirect = request.args.get("redirect", default="false") == "true"
     theme = request.args.get("theme", default="default")
+    bar_color = request.args.get("bar_color", default="#53b14f")
 
     item, is_now_playing = get_song_info(uid)
 
@@ -222,12 +211,12 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme)
+    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
 
-    print(getsizeof(CACHE_TOKEN_INFO))
+    print('cache size:', getsizeof(CACHE_TOKEN_INFO))
 
     return resp
 
