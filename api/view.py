@@ -7,16 +7,20 @@ load_dotenv(find_dotenv())
 from firebase_admin import credentials
 from firebase_admin import firestore
 from sys import getsizeof
+from PIL import Image
 import firebase_admin
 
 from time import time
 
+import io
 import os
 import json
 from util import spotify
 import random
 import requests
 import functools
+import colorgram
+import math
 
 print("Starting Server")
 
@@ -48,33 +52,52 @@ def generate_css_bar(num_bar=75):
 
 
 @functools.lru_cache(maxsize=128)
-def load_image_b64(url):
-
+def load_image(url):
     resposne = requests.get(url)
-    return b64encode(resposne.content).decode("ascii")
+    return resposne.content
+
+
+def to_img_b64(content):
+    return b64encode(content).decode("ascii")
+
+
+def load_image_b64(url):
+    return to_img_b64(load_image(url))
+
+
+def isLightOrDark(rgbColor=[0, 128, 255], threshold=127.5):
+    # https://stackoverflow.com/a/58270890
+    [r, g, b] = rgbColor
+    hsp = math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+    if hsp > threshold:
+        return "light"
+    else:
+        return "dark"
 
 
 @functools.lru_cache(maxsize=128)
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color):
+def make_svg(
+    artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color,
+):
     height = 0
     num_bar = 75
 
-    if theme == 'compact':
-      if cover_image:
-        height = 400
-      else:
-        height = 100
-    elif theme == 'natemoo-re':
+    if theme == "compact":
+        if cover_image:
+            height = 400
+        else:
+            height = 100
+    elif theme == "natemoo-re":
         height = 84
         num_bar = 100
-    elif theme == 'novatorem':
+    elif theme == "novatorem":
         height = 100
         num_bar = 100
     else:
-      if cover_image:
-        height = 445
-      else:
-        height = 145
+        if cover_image:
+            height = 445
+        else:
+            height = 145
 
     if is_now_playing:
         title_text = "Now playing"
@@ -95,7 +118,7 @@ def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, ba
         "song_name": song_name,
         "img": img,
         "cover_image": cover_image,
-        'bar_color': bar_color,
+        "bar_color": bar_color,
     }
 
     return render_template(f"spotify.{theme}.html.j2", **rendered_data)
@@ -185,6 +208,7 @@ def catch_all(path):
     is_redirect = request.args.get("redirect", default="false") == "true"
     theme = request.args.get("theme", default="default")
     bar_color = request.args.get("bar_color", default="53b14f")
+    is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
 
     item, is_now_playing = get_song_info(uid)
 
@@ -193,13 +217,39 @@ def catch_all(path):
     if is_redirect:
         return redirect(item["uri"], code=302)
 
-    img = ""
+    img = None
+    img_b64 = ""
     if cover_image:
 
         if currently_playing_type == "track":
-            img = load_image_b64(item["album"]["images"][1]["url"])
+            img = load_image(item["album"]["images"][1]["url"])
         elif currently_playing_type == "episode":
-            img = load_image_b64(item["images"][1]["url"])
+            img = load_image(item["images"][1]["url"])
+
+        img_b64 = to_img_b64(img)
+
+    # Extract cover image color
+    if is_bar_color_from_cover and img:
+
+        is_skip_dark = False
+        if theme in ["default"]:
+            is_skip_dark = True
+
+        pil_img = Image.open(io.BytesIO(img))
+        colors = colorgram.extract(pil_img, 5)
+
+        for color in colors:
+
+            rgb = color.rgb
+
+            light_or_dark = isLightOrDark([rgb.r, rgb.g, rgb.b], threshold=80)
+
+            if light_or_dark == "dark" and is_skip_dark:
+                # Skip to use bar in dark color
+                continue
+
+            bar_color = "%02x%02x%02x" % rgb
+            break
 
     # Find artist_name and song_name
     if currently_playing_type == "track":
@@ -210,12 +260,12 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color)
+    svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color,)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
 
-    print('cache size:', getsizeof(CACHE_TOKEN_INFO))
+    print("cache size:", getsizeof(CACHE_TOKEN_INFO))
 
     return resp
 
