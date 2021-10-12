@@ -94,8 +94,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="input-field col s12 m6 offset-m3">
+      <div class="row center">
+        <div class="input-field col s12 m6 offset-m2">
           <select>
             <option value="default" selected>default</option>
             <option value="compact">compact</option>
@@ -104,6 +104,12 @@
             <option value="karaoke">karaoke</option>
           </select>
           <label>Choose theme</label>
+        </div>
+        <div class="input-field col s12 m2">
+          <label>
+            <span>Bar Color</span>
+            <input type="color" id="bar_color" name="bar_color" value="#53b14f">
+          </label>
         </div>
       </div>
 
@@ -198,6 +204,11 @@
 
     $('select').change(function() {
       urlParams.theme = this.value;
+      updateUrl();
+    });
+
+    $('#bar_color').change(function() {
+      urlParams.bar_color = this.value.substring(1);
       updateUrl();
     });
 
