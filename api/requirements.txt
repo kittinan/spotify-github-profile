@@ -3,3 +3,5 @@ Werkzeug==1.0.1
 requests==2.24.0
 python-dotenv==0.14.0
 firebase-admin==4.3.0
+Pillow==8.3.2
+colorgram.py==1.2.0

@@ -111,6 +111,15 @@
             <input type="color" id="bar_color" name="bar_color" value="#53b14f">
           </label>
         </div>
+
+        <div class="input-field col s12 m2">
+          <label>
+            <input type="checkbox" class="filled-in" id="bar_color_cover" />
+            <span>Automatic bar color</span>
+          </label>
+
+        </div>
+
       </div>
 
       <div class="row center">
@@ -209,6 +218,11 @@
 
     $('#bar_color').change(function() {
       urlParams.bar_color = this.value.substring(1);
+      updateUrl();
+    });
+
+    $('#bar_color_cover').change(function() {
+      urlParams.bar_color_cover = this.checked;
       updateUrl();
     });
 
