@@ -12,7 +12,27 @@ Running on Vercel serverless function, store data in Firebase (store only access
 
 ## Example
 
-![spotify-github-profile](/img/example.svg)
+- Default theme
+
+![spotify-github-profile](/img/default.svg)
+
+- Compact theme
+
+![spotify-github-profile](/img/compact.svg)
+
+- Natemoo-re theme
+
+![spotify-github-profile](/img/natemoo-re.svg)
+
+- Novatorem theme
+
+![spotify-github-profile](/img/novatorem.svg)
+
+- Karaoke theme
+
+![spotify-github-profile](/img/karaoke.svg)
+
+
 
 ## Running for development locally
 
