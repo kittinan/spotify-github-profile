@@ -5,3 +5,4 @@ python-dotenv==0.14.0
 firebase-admin==4.3.0
 Pillow==8.3.2
 colorgram.py==1.2.0
+markupsafe==2.0.1
