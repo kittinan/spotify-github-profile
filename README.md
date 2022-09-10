@@ -4,7 +4,21 @@ Create Spotify now playing card on your github profile
 
 Running on Vercel serverless function, store data in Firebase (store only access_token, refresh_token, token_expired_timestamp)
 
-## Connect & Grant Permission
+Table of Contents  
+[Connect And Grant Permission](#connect-and-grant-permission)  
+[Example](#example)  
+[Running for development locally](#running-for-development-locally)  
+[Setting up Vercel](#setting-up-vercel)  
+[Setting up Firebase](#setting-up-firebase)  
+[Setting up Spotify dev](#setting-up-spotify-dev)  
+[Running locally](#running-locally)  
+[How to Contribute](#how-to-contribute)  
+[Known Bugs](#known-bugs)  
+[Features in Progress](#features-in-progress)  
+[Credit](#credit)  
+
+
+## Connect And Grant Permission
 
 - Click `Connect with Spotify` button below to grant permission
 
@@ -84,6 +98,21 @@ Vercel CLI 20.1.2 dev (beta) — https://vercel.com/feedback
 ```
 
 - Now try to access http://localhost:3000/api/login
+
+## How to Contribute
+
+- Develop locally and submit a pull request!
+- Submit newly encountered bugs to the [Issues](https://github.com/kittinan/spotify-github-profile/issues) page
+- Submit feature suggestions to the [Issues](https://github.com/kittinan/spotify-github-profile/issues) page, with the label [Feature Suggestion]
+
+## Known Bugs
+
+[404/500 Error when playing local files](https://github.com/kittinan/spotify-github-profile/issues/19)
+
+## Features in Progress
+
+[Currently offline playing](https://github.com/kittinan/spotify-github-profile/issues/24)  
+[Cross-platform support (Pandora, Apple Music, etc.)](https://github.com/kittinan/spotify-github-profile/issues/37)
 
 ## Credit
 
