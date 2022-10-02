@@ -6,13 +6,18 @@ from view import generate_css_bar, load_image_b64
 app = Flask(__name__)
 
 
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color):
+def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, is_offline):
     height = 445 if cover_image else 145
     num_bar = 75
 
     if is_now_playing:
         title_text = "Now playing"
         content_bar = "".join(["<div class='bar'></div>" for i in range(num_bar)])
+    elif is_offline:
+        title_text = "Not playing"
+        song_name = "Offline"
+        artist_name = "Currently not playing on Spotify"
+        content_bar = ""
     else:
         title_text = "Recently played"
         content_bar = ""
@@ -48,8 +53,9 @@ def catch_all(path):
     cover_image = True
     theme = 'default'
     bar_color = '53b14f'
+    is_offline = False
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color)
+    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, is_offline)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
