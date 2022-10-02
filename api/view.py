@@ -77,7 +77,7 @@ def isLightOrDark(rgbColor=[0, 128, 255], threshold=127.5):
 
 @functools.lru_cache(maxsize=128)
 def make_svg(
-    artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color,
+    artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, show_offline
 ):
     height = 0
     num_bar = 75
@@ -102,11 +102,15 @@ def make_svg(
     if is_now_playing:
         title_text = "Now playing"
         content_bar = "".join(["<div class='bar'></div>" for i in range(num_bar)])
+        css_bar = generate_css_bar(num_bar)
+    elif show_offline:
+        title_text = "Not playing"
+        content_bar = ""
+        css_bar = None
     else:
         title_text = "Recently played"
         content_bar = ""
-
-    css_bar = generate_css_bar(num_bar)
+        css_bar = generate_css_bar(num_bar)
 
     rendered_data = {
         "height": height,
@@ -181,14 +185,17 @@ def get_access_token(uid):
     return access_token
 
 
-def get_song_info(uid):
+def get_song_info(uid, show_offline):
     access_token = get_access_token(uid)
 
     data = spotify.get_now_playing(access_token)
+
     if data:
         item = data["item"]
         item["currently_playing_type"] = data["currently_playing_type"]
         is_now_playing = True
+    elif show_offline:
+        return None, False
     else:
         recent_plays = spotify.get_recently_play(access_token)
         size_recent_play = len(recent_plays["items"])
@@ -209,8 +216,19 @@ def catch_all(path):
     theme = request.args.get("theme", default="default")
     bar_color = request.args.get("bar_color", default="53b14f")
     is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
+    show_offline = request.args.get("show_offline", default="false") == "true"
 
-    item, is_now_playing = get_song_info(uid)
+    item, is_now_playing = get_song_info(uid, show_offline)
+
+    if show_offline and not is_now_playing:
+        artist_name = "Offline"
+        song_name = "Currently not playing on Spotify"
+        img_b64 = ""
+        cover_image = False
+        svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline)
+        resp = Response(svg, mimetype="image/svg+xml")
+        resp.headers["Cache-Control"] = "s-maxage=1"
+        return resp
 
     currently_playing_type = item.get("currently_playing_type", "track")
 
@@ -260,7 +278,7 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color,)
+    svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"

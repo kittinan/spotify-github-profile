@@ -74,22 +74,28 @@
       </div>
 
       <div class="row center">
-        <div class="col s12 m4">
+        <div class="col s12 m3">
           <label class="row">
             <input type="checkbox" class="filled-in" checked="checked" id="cover-image-checkbox" />
             <span>Cover Image</span>
           </label>
         </div>
-        <div class="col s12 m4">
+        <div class="col s12 m3">
           <label class="row">
             <input type="checkbox" class="filled-in" id="open-song-checkbox" />
             <span>Open in Spotify</span>
           </label>
         </div>
-        <div class="col s12 m4">
+        <div class="col s12 m3">
           <label class="row">
             <input type="checkbox" class="filled-in" id="org-mode-checkbox" />
             <span>Org-Mode Snippet</span>
+          </label>
+        </div>
+        <div class="col s12 m3">
+          <label class="row">
+            <input type="checkbox" class="filled-in" id="show-offline-checkbox" />
+            <span>Show Offline</span>
           </label>
         </div>
       </div>
@@ -177,6 +183,7 @@
       uid: uid,
       cover_image: true,
       theme: 'default',
+      show_offline: false,
     };
     var openSong = false;
     var orgMode = false;
@@ -207,6 +214,11 @@
 
     $("#org-mode-checkbox").change(function() {
       orgMode = this.checked;
+      updateUrl();
+    });
+
+    $("#show-offline-checkbox").change(function() {
+      urlParams.show_offline = this.checked;
       updateUrl();
     });
 
