@@ -1,44 +1,8 @@
-from flask import Flask, Response, jsonify, render_template, redirect, request
-from base64 import b64decode, b64encode
+from flask import Flask, Response
 
-from view import generate_css_bar, load_image_b64
+from view import load_image_b64, make_svg
 
 app = Flask(__name__)
-
-
-def make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, is_offline):
-    height = 445 if cover_image else 145
-    num_bar = 75
-
-    if is_now_playing:
-        title_text = "Now playing"
-        content_bar = "".join(["<div class='bar'></div>" for i in range(num_bar)])
-    elif is_offline:
-        title_text = "Not playing"
-        song_name = "Offline"
-        artist_name = "Currently not playing on Spotify"
-        content_bar = ""
-    else:
-        title_text = "Recently played"
-        content_bar = ""
-
-    css_bar = generate_css_bar(num_bar)
-
-    rendered_data = {
-        "height": height,
-        "num_bar": num_bar,
-        "content_bar": content_bar,
-        "css_bar": css_bar,
-        "title_text": title_text,
-        "artist_name": artist_name,
-        "song_name": song_name,
-        "img": img,
-        "cover_image": cover_image,
-        "bar_color": bar_color,
-    }
-
-    return render_template(f"spotify.{theme}.html.j2", **rendered_data)
-
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")

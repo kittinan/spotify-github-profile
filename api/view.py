@@ -2,19 +2,16 @@ from flask import Flask, Response, jsonify, render_template, redirect, request
 from base64 import b64decode, b64encode
 from dotenv import load_dotenv, find_dotenv
 
+from util.firestore import get_firestore_db
+
 load_dotenv(find_dotenv())
 
-from firebase_admin import credentials
-from firebase_admin import firestore
 from sys import getsizeof
 from PIL import Image
-import firebase_admin
 
 from time import time
 
 import io
-import os
-import json
 from util import spotify
 import random
 import requests
@@ -24,13 +21,7 @@ import math
 
 print("Starting Server")
 
-firebase_config = os.getenv("FIREBASE")
-firebase_dict = json.loads(b64decode(firebase_config))
-
-cred = credentials.Certificate(firebase_dict)
-firebase_admin.initialize_app(cred)
-
-db = firestore.client()
+db = None
 CACHE_TOKEN_INFO = {}
 
 app = Flask(__name__)
@@ -289,4 +280,5 @@ def catch_all(path):
 
 
 if __name__ == "__main__":
+    db = get_firestore_db()
     app.run(debug=True, port=5003)
