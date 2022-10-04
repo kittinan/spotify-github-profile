@@ -21,7 +21,7 @@ import math
 
 print("Starting Server")
 
-db = None
+db = get_firestore_db()
 CACHE_TOKEN_INFO = {}
 
 app = Flask(__name__)
@@ -280,5 +280,5 @@ def catch_all(path):
 
 
 if __name__ == "__main__":
-    db = get_firestore_db()
+    
     app.run(debug=True, port=5003)
