@@ -18,8 +18,9 @@ def catch_all(path):
     theme = 'default'
     bar_color = '53b14f'
     is_offline = False
+    rendered_data = 'ffffff00'
 
-    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, is_offline)
+    svg = make_svg(artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, is_offline, background_color)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"

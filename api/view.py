@@ -218,7 +218,7 @@ def catch_all(path):
         song_name = "Currently not playing on Spotify"
         img_b64 = ""
         cover_image = False
-        svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline)
+        svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline, background_color)
         resp = Response(svg, mimetype="image/svg+xml")
         resp.headers["Cache-Control"] = "s-maxage=1"
         return resp
