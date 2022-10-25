@@ -207,7 +207,7 @@ def catch_all(path):
     is_redirect = request.args.get("redirect", default="false") == "true"
     theme = request.args.get("theme", default="default")
     bar_color = request.args.get("bar_color", default="53b14f")
-    background_color = request.args.get("background_color", default="ffffff00")
+    background_color = request.args.get("background_color", default="121212")
     is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
     show_offline = request.args.get("show_offline", default="false") == "true"
 
