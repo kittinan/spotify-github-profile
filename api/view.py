@@ -68,7 +68,7 @@ def isLightOrDark(rgbColor=[0, 128, 255], threshold=127.5):
 
 @functools.lru_cache(maxsize=128)
 def make_svg(
-    artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, show_offline
+    artist_name, song_name, img, is_now_playing, cover_image, theme, bar_color, show_offline, background_color
 ):
     height = 0
     num_bar = 75
@@ -114,6 +114,7 @@ def make_svg(
         "img": img,
         "cover_image": cover_image,
         "bar_color": bar_color,
+        "background_color": background_color
     }
 
     return render_template(f"spotify.{theme}.html.j2", **rendered_data)
@@ -206,6 +207,7 @@ def catch_all(path):
     is_redirect = request.args.get("redirect", default="false") == "true"
     theme = request.args.get("theme", default="default")
     bar_color = request.args.get("bar_color", default="53b14f")
+    background_color = request.args.get("background_color", default="121212")
     is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
     show_offline = request.args.get("show_offline", default="false") == "true"
 
@@ -216,7 +218,7 @@ def catch_all(path):
         song_name = "Currently not playing on Spotify"
         img_b64 = ""
         cover_image = False
-        svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline)
+        svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline, background_color)
         resp = Response(svg, mimetype="image/svg+xml")
         resp.headers["Cache-Control"] = "s-maxage=1"
         return resp
@@ -269,7 +271,7 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
-    svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline)
+    svg = make_svg(artist_name, song_name, img_b64, is_now_playing, cover_image, theme, bar_color, show_offline, background_color)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
