@@ -7,7 +7,7 @@
       }
 
       .container {
-        background-color: #{{background_color}};
+        background-color: #121212;
         border-radius: 10px;
 
         padding: 10px 10px
