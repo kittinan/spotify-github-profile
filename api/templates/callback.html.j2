@@ -112,13 +112,19 @@
           <label>Choose theme</label>
         </div>
         <div class="row bar-color">
-          <div class="col s12 m6">
+          <div class="col s12 m4">
             <label  class="row">
               <span>Bar Color</span>
               <input type="color" id="bar_color" name="bar_color" value="#53b14f">
             </label>
           </div>
-          <div class="col s12 m6">
+          <div class="col s12 m4">
+            <label  class="row">
+              <span>Background Color</span>
+              <input type="color" id="background_color" name="background_color" value="#121212">
+            </label>
+          </div>
+          <div class="col s12 m4">
             <label  class="row">
               <input type="checkbox" class="filled-in" id="bar_color_cover" />
               <span>Automatic bar color</span>
@@ -184,6 +190,7 @@
       cover_image: true,
       theme: 'default',
       show_offline: false,
+      background_color: "121212",
     };
     var openSong = false;
     var orgMode = false;
@@ -237,6 +244,11 @@
 
     $('#bar_color').change(function() {
       urlParams.bar_color = this.value.substring(1);
+      updateUrl();
+    });
+
+    $('#background_color').change(function() {
+      urlParams.background_color = this.value.substring(1);
       updateUrl();
     });
 
