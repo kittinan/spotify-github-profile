@@ -111,7 +111,6 @@ Vercel CLI 20.1.2 dev (beta) — https://vercel.com/feedback
 
 ## Features in Progress
 
-[Currently offline playing](https://github.com/kittinan/spotify-github-profile/issues/24)  
 [Cross-platform support (Pandora, Apple Music, etc.)](https://github.com/kittinan/spotify-github-profile/issues/37)
 
 ## Credit
