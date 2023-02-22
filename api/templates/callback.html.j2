@@ -130,6 +130,13 @@
               <span>Automatic bar color</span>
             </label>
           </div>
+          
+          <div class="col s12 m4">
+            <label  class="row">
+              <input type="checkbox" class="filled-in" id="interchange" />
+              <span>Interchange Artist name and Song name</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -191,6 +198,7 @@
       theme: 'default',
       show_offline: false,
       background_color: "121212",
+      interchange:false
     };
     var openSong = false;
     var orgMode = false;
@@ -211,6 +219,10 @@
 
     $("#cover-image-checkbox").change(function() {
       urlParams.cover_image = this.checked;
+      updateUrl();
+    });
+    $("#interchange").change(function() {
+      urlParams.interchange = this.checked;
       updateUrl();
     });
 
