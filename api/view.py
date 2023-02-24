@@ -218,12 +218,17 @@ def catch_all(path):
     background_color = request.args.get("background_color", default="121212")
     is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
     show_offline = request.args.get("show_offline", default="false") == "true"
+    interchange = request.args.get("interchange", default="false") == "true"
 
     item, is_now_playing = get_song_info(uid, show_offline)
 
     if show_offline and not is_now_playing:
-        artist_name = "Offline"
-        song_name = "Currently not playing on Spotify"
+        if interchange:
+          artist_name = "Currently not playing on Spotify"
+          song_name = "Offline"
+        else:
+          artist_name = "Offline"
+          song_name = "Currently not playing on Spotify"
         img_b64 = ""
         cover_image = False
         svg = make_svg(
@@ -289,6 +294,11 @@ def catch_all(path):
         artist_name = item["show"]["publisher"].replace("&", "&amp;")
         song_name = item["name"].replace("&", "&amp;")
 
+    if interchange:
+      x = artist_name
+      artist_name = song_name
+      song_name = x
+      
     svg = make_svg(
         artist_name,
         song_name,
