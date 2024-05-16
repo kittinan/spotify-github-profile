@@ -1,4 +1,4 @@
-# spotify-github-profile
+# spotify-github-profile.
 
 Create Spotify now playing card on your github profile
 
