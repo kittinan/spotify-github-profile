@@ -80,7 +80,9 @@ To develop locally, you need:
 ### Running locally
 
 - Install [Vercel command line](https://vercel.com/download) with `npm i -g vercel`
-- Create `.env` file at the root of the project and paste your keys in `SPOTIFY_CLIENT_ID`, `SPOTIFY_SECRET_ID`, and `FIREBASE`
+- Create `.env` file at the root of the project 
+- Paste your keys in `SPOTIFY_CLIENT_ID`, `SPOTIFY_SECRET_ID`, and insert the name of your downloaded JSON file in `FIREBASE`
+
 
 ```sh
 BASE_URL='http://localhost:3000/api'
