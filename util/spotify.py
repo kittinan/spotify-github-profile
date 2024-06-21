@@ -17,10 +17,10 @@ REDIRECT_URI = "{}/callback".format(BASE_URL)
 
 # scope user-read-currently-playing,user-read-recently-played
 SPOTIFY_URL_REFRESH_TOKEN = "https://accounts.spotify.com/api/token"
-SPOTIFY_URL_NOW_PLAYING = (
-    "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode"
+SPOTIFY_URL_NOW_PLAYING = "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode"
+SPOTIFY_URL_RECENTLY_PLAY = (
+    "https://api.spotify.com/v1/me/player/recently-played?limit=10"
 )
-SPOTIFY_URL_RECENTLY_PLAY = "https://api.spotify.com/v1/me/player/recently-played?limit=10"
 
 SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
@@ -28,7 +28,9 @@ SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
 
 def get_authorization():
 
-    return b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET_ID}".encode()).decode("ascii")
+    return b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET_ID}".encode()).decode(
+        "ascii"
+    )
 
 
 def generate_token(authorization_code):
@@ -96,4 +98,3 @@ def get_now_playing(access_token):
 
     repsonse_json = response.json()
     return repsonse_json
-
