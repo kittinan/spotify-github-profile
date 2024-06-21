@@ -4,7 +4,15 @@ Create Spotify now playing card on your github profile
 
 Running on Vercel serverless function, store data in Firebase (store only access_token, refresh_token, token_expired_timestamp)
 
-Table of Contents  
+## Annoucements
+
+**2024-06-21**
+
+Vercel change the package the free tier is not enough for our usage. I moved service to self-host at Digital Ocean.
+
+Please replace your old endpoint `https://spotify-github-profile.vercel.app` to `https://spotify-github-profile.kittinanx.com`
+
+## Table of Contents  
 [Connect And Grant Permission](#connect-and-grant-permission)  
 [Example](#example)  
 [Running for development locally](#running-for-development-locally)  
@@ -17,12 +25,11 @@ Table of Contents
 [Features in Progress](#features-in-progress)  
 [Credit](#credit)  
 
-
 ## Connect And Grant Permission
 
 - Click `Connect with Spotify` button below to grant permission
 
-[<img src="/img/btn-spotify.png">](https://spotify-github-profile.vercel.app/api/login)
+[<img src="/img/btn-spotify.png">](https://spotify-github-profile.kittinanx.com/api/login)
 
 ## Example
 
