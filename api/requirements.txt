@@ -6,3 +6,4 @@ firebase-admin==4.3.0
 Pillow==9.0.1
 colorgram.py==1.2.0
 markupsafe==2.0.1
+gunicorn==22.0.0

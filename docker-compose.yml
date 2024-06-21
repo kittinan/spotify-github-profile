@@ -1,0 +1,39 @@
+version: "3"
+services:
+  view:
+    image: spotify-github-profile
+    build:
+      dockerfile: Dockerfile
+    #restart: always
+    env_file: .env
+    environment:
+      PYTHONUNBUFFERED: 1
+    command: "gunicorn -b 0.0.0.0:5003 --chdir api view:app"
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./:/app
+
+  login:
+    image: spotify-github-profile
+    #restart: always
+    env_file: .env
+    environment:
+      PYTHONUNBUFFERED: 1
+    command: "gunicorn -b 0.0.0.0:5001 --chdir api login:app"
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./:/app
+
+  callback:
+    image: spotify-github-profile
+    #restart: always
+    env_file: .env
+    environment:
+      PYTHONUNBUFFERED: 1
+    command: "gunicorn -b 0.0.0.0:5002 --chdir api callback:app"
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./:/app

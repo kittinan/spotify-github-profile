@@ -7,7 +7,7 @@ from util.firestore import get_firestore_db
 load_dotenv(find_dotenv())
 
 from sys import getsizeof
-from PIL import Image
+from PIL import Image, ImageFile
 
 from time import time
 
@@ -18,6 +18,8 @@ import requests
 import functools
 import colorgram
 import math
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 print("Starting Server")
 
@@ -34,8 +36,10 @@ def generate_css_bar(num_bar=75):
     for i in range(1, num_bar + 1):
 
         anim = random.randint(350, 500)
-        css_bar += ".bar:nth-child({})  {{ left: {}px; animation-duration: {}ms; }}".format(
-            i, left, anim
+        css_bar += (
+            ".bar:nth-child({})  {{ left: {}px; animation-duration: {}ms; }}".format(
+                i, left, anim
+            )
         )
         left += 4
 
@@ -173,7 +177,10 @@ def get_access_token(uid):
 
         new_token = spotify.refresh_token(refresh_token)
         expired_ts = int(time()) + new_token["expires_in"]
-        update_data = {"access_token": new_token["access_token"], "expired_ts": expired_ts}
+        update_data = {
+            "access_token": new_token["access_token"],
+            "expired_ts": expired_ts,
+        }
         doc_ref = db.collection("users").document(uid)
         doc_ref.update(update_data)
 
@@ -216,19 +223,25 @@ def catch_all(path):
     theme = request.args.get("theme", default="default")
     bar_color = request.args.get("bar_color", default="53b14f")
     background_color = request.args.get("background_color", default="121212")
-    is_bar_color_from_cover = request.args.get("bar_color_cover", default="false") == "true"
+    is_bar_color_from_cover = (
+        request.args.get("bar_color_cover", default="false") == "true"
+    )
     show_offline = request.args.get("show_offline", default="false") == "true"
     interchange = request.args.get("interchange", default="false") == "true"
+
+    # Handle invalid request
+    if not uid:
+        return Response("not ok")
 
     item, is_now_playing = get_song_info(uid, show_offline)
 
     if show_offline and not is_now_playing:
         if interchange:
-          artist_name = "Currently not playing on Spotify"
-          song_name = "Offline"
+            artist_name = "Currently not playing on Spotify"
+            song_name = "Offline"
         else:
-          artist_name = "Offline"
-          song_name = "Currently not playing on Spotify"
+            artist_name = "Offline"
+            song_name = "Currently not playing on Spotify"
         img_b64 = ""
         cover_image = False
         svg = make_svg(
@@ -295,10 +308,10 @@ def catch_all(path):
         song_name = item["name"].replace("&", "&amp;")
 
     if interchange:
-      x = artist_name
-      artist_name = song_name
-      song_name = x
-      
+        x = artist_name
+        artist_name = song_name
+        song_name = x
+
     svg = make_svg(
         artist_name,
         song_name,
