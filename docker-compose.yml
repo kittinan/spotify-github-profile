@@ -4,7 +4,7 @@ services:
     image: spotify-github-profile
     build:
       dockerfile: Dockerfile
-    #restart: always
+    restart: always
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
@@ -16,7 +16,7 @@ services:
 
   login:
     image: spotify-github-profile
-    #restart: always
+    restart: always
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
@@ -28,7 +28,7 @@ services:
 
   callback:
     image: spotify-github-profile
-    #restart: always
+    restart: always
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
