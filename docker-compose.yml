@@ -8,7 +8,7 @@ services:
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
-    command: "gunicorn -b 0.0.0.0:5003 --chdir api view:app"
+    command: "gunicorn -w 4 -b 0.0.0.0:5003 --chdir api view:app"
     ports:
       - "5003:5003"
     volumes:
