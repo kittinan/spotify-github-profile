@@ -146,6 +146,13 @@ def get_cache_token_info(uid):
     return token_info
 
 
+def delete_cache_token_info(uid):
+    global CACHE_TOKEN_INFO
+
+    if uid in CACHE_TOKEN_INFO:
+        del CACHE_TOKEN_INFO[uid]
+
+
 def get_access_token(uid):
     global CACHE_TOKEN_INFO
 
@@ -158,16 +165,15 @@ def get_access_token(uid):
         doc = doc_ref.get()
 
         if not doc.exists:
-            print("not exist")
-            # TODO: show error
-            return Response("not ok")
+            print("not exist data in firebase: {}".format(uid))
+            return None
 
         token_info = doc.to_dict()
 
         CACHE_TOKEN_INFO[uid] = token_info
 
     current_ts = int(time())
-    access_token = token_info["access_token"]
+    access_token = token_info.get("access_token", None)
 
     # Check token expired
     expired_ts = token_info.get("expired_ts")
@@ -176,6 +182,17 @@ def get_access_token(uid):
         refresh_token = token_info["refresh_token"]
 
         new_token = spotify.refresh_token(refresh_token)
+
+        # Handle refresh token revoke
+        if new_token.get("error") == "invalid_grant":
+            # Delete token in firebase
+            doc_ref = db.collection("users").document(uid)
+            doc_ref.delete()
+
+            # Delete token in memory cache
+            delete_cache_token_info(uid)
+            return None
+
         expired_ts = int(time()) + new_token["expires_in"]
         update_data = {
             "access_token": new_token["access_token"],
@@ -195,6 +212,13 @@ def get_access_token(uid):
 def get_song_info(uid, show_offline):
     access_token = get_access_token(uid)
 
+    item = None
+    is_now_playing = False
+
+    # Handle refrest_token revoke or invalid token
+    if access_token is None:
+        raise spotify.InvalidTokenError("Invalid Spotify access_token or refresh_token")
+
     data = spotify.get_now_playing(access_token)
 
     if data:
@@ -206,6 +230,11 @@ def get_song_info(uid, show_offline):
     else:
         recent_plays = spotify.get_recently_play(access_token)
         size_recent_play = len(recent_plays["items"])
+
+        # Handle empty recently play, should offline
+        if size_recent_play == 0:
+            return None, False
+
         idx = random.randint(0, size_recent_play - 1)
         item = recent_plays["items"][idx]["track"]
         item["currently_playing_type"] = "track"
@@ -233,9 +262,16 @@ def catch_all(path):
     if not uid:
         return Response("not ok")
 
-    item, is_now_playing = get_song_info(uid, show_offline)
+    try:
+        item, is_now_playing = get_song_info(uid, show_offline)
+    except spotify.InvalidTokenError as e:
 
-    if show_offline and not is_now_playing:
+        # Handle invalid token
+        return Response(
+            "Error: Invalid Spotify access_token or refresh_token. Possibly the token revoked. Please re-login at https://github.com/kittinan/spotify-github-profile"
+        )
+
+    if (show_offline and not is_now_playing) or (item is None):
         if interchange:
             artist_name = "Currently not playing on Spotify"
             song_name = "Offline"
