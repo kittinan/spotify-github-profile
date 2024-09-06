@@ -26,6 +26,10 @@ SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
 
 
+class InvalidTokenError(Exception):
+    pass
+
+
 def get_authorization():
 
     return b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET_ID}".encode()).decode(
