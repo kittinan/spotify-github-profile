@@ -116,9 +116,8 @@ Vercel CLI 20.1.2 dev (beta) — https://vercel.com/feedback
 
 [404/500 Error when playing local files](https://github.com/kittinan/spotify-github-profile/issues/19)
 
-## Features in Progress
-
-[Cross-platform support (Pandora, Apple Music, etc.)](https://github.com/kittinan/spotify-github-profile/issues/37)
+## Other Platforms
+- [Apple Music GitHub Profile](https://github.com/rayriffy/apple-music-github-profile)
 
 ## Credit
 
