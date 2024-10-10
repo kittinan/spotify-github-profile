@@ -19,6 +19,12 @@ import functools
 import colorgram
 import math
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+DEFAULT_IMAGE_PATH = "https://via.placeholder.com/300x300.png?text=♪+No+Cover+Available"
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 print("Starting Server")
@@ -45,11 +51,30 @@ def generate_css_bar(num_bar=75):
 
     return css_bar
 
+def load_default_image():
+    try:
+        with open(DEFAULT_IMAGE_PATH, 'rb') as f:
+            return f.read()
+    except FileNotFoundError as e:
+        logger.error(f"Default image not found: {e}")
+        return None
 
 @functools.lru_cache(maxsize=128)
 def load_image(url):
-    resposne = requests.get(url)
-    return resposne.content
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.content
+    except requests.HTTPError as http_err:
+        logger.error(f"HTTP error occurred while fetching image: {http_err}")
+    except requests.ConnectionError as conn_err:
+        logger.error(f"Connection error occurred: {conn_err}")
+    except requests.Timeout as timeout_err:
+        logger.error(f"Timeout error occurred: {timeout_err}")
+    except requests.RequestException as req_err:
+        logger.error(f"An error occurred while fetching image: {req_err}")
+    
+    return load_default_image()
 
 
 def to_img_b64(content):
