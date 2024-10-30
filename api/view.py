@@ -96,6 +96,8 @@ def make_svg(
     elif theme == "novatorem":
         height = 100
         num_bar = 100
+    elif theme == "apple-music":
+        height = 445
     else:
         if cover_image:
             height = 445
