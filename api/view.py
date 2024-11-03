@@ -18,6 +18,7 @@ import requests
 import functools
 import colorgram
 import math
+import html
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -70,6 +71,10 @@ def isLightOrDark(rgbColor=[0, 128, 255], threshold=127.5):
         return "dark"
 
 
+def encode_html_entities(text):
+    return html.escape(text)
+
+
 # @functools.lru_cache(maxsize=128)
 def make_svg(
     artist_name,
@@ -84,6 +89,10 @@ def make_svg(
 ):
     height = 0
     num_bar = 75
+
+    # Sanitize input
+    artist_name = encode_html_entities(artist_name)
+    song_name = encode_html_entities(song_name)
 
     if theme == "compact":
         if cover_image:
