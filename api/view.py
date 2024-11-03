@@ -49,7 +49,6 @@ def generate_css_bar(num_bar=75):
 
 @functools.lru_cache(maxsize=128)
 def load_image(url):
-    print("load image:", url)
     resposne = requests.get(url)
     return resposne.content
 
