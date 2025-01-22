@@ -345,12 +345,12 @@ def catch_all(path):
 
     # Find artist_name and song_name
     if currently_playing_type == "track":
-        artist_name = item["artists"][0]["name"].replace("&", "&amp;")
-        song_name = item["name"].replace("&", "&amp;")
+        artist_name = item["artists"][0]["name"]
+        song_name = item["name"]
 
     elif currently_playing_type == "episode":
-        artist_name = item["show"]["publisher"].replace("&", "&amp;")
-        song_name = item["name"].replace("&", "&amp;")
+        artist_name = item["show"]["publisher"]
+        song_name = item["name"]
 
     if interchange:
         x = artist_name
