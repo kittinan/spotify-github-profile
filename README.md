@@ -22,7 +22,6 @@ Please replace your old endpoint `https://spotify-github-profile.vercel.app` to 
 [Running locally](#running-locally)  
 [How to Contribute](#how-to-contribute)  
 [Known Bugs](#known-bugs)  
-[Features in Progress](#features-in-progress)  
 [Credit](#credit)  
 
 ## Connect And Grant Permission
