@@ -25,17 +25,14 @@ SPOTIFY_URL_RECENTLY_PLAY = (
 SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
 
-
 class InvalidTokenError(Exception):
     pass
-
 
 def get_authorization():
 
     return b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET_ID}".encode()).decode(
         "ascii"
     )
-
 
 def generate_token(authorization_code):
 
@@ -45,13 +42,12 @@ def generate_token(authorization_code):
         "code": authorization_code,
     }
 
-    headers = {"Authorization": "Basic {}".format(get_authorization())}
+    headers = {"Authorization": f"Basic {get_authorization()}"}
 
     response = requests.post(SPOTIFY_URL_GENERATE_TOKEN, data=data, headers=headers)
-    repsonse_json = response.json()
+    response_json = response.json()
 
-    return repsonse_json
-
+    return response_json
 
 def refresh_token(refresh_token):
 
@@ -60,23 +56,21 @@ def refresh_token(refresh_token):
         "refresh_token": refresh_token,
     }
 
-    headers = {"Authorization": "Basic {}".format(get_authorization())}
+    headers = {"Authorization": f"Basic {get_authorization()}"}
 
     response = requests.post(SPOTIFY_URL_REFRESH_TOKEN, data=data, headers=headers)
-    repsonse_json = response.json()
+    response_json = response.json()
 
-    return repsonse_json
-
+    return response_json
 
 def get_user_profile(access_token):
 
-    headers = {"Authorization": "Bearer {}".format(access_token)}
+    headers = {"Authorization": f"Bearer {access_token}"}
 
     response = requests.get(SPOTIFY_URL_USER_INFO, headers=headers)
-    repsonse_json = response.json()
+    response_json = response.json()
 
-    return repsonse_json
-
+    return response_json
 
 def get_recently_play(access_token):
 
@@ -87,9 +81,8 @@ def get_recently_play(access_token):
     if response.status_code == 204:
         return {}
 
-    repsonse_json = response.json()
-    return repsonse_json
-
+    response_json = response.json()
+    return response_json
 
 def get_now_playing(access_token):
 
@@ -100,5 +93,5 @@ def get_now_playing(access_token):
     if response.status_code == 204:
         return {}
 
-    repsonse_json = response.json()
-    return repsonse_json
+    response_json = response.json()
+    return response_json
