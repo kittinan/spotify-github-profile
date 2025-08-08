@@ -115,6 +115,7 @@
             <option value="natemoo-re">natemoo-re</option>
             <option value="novatorem">novatorem</option>
             <option value="karaoke">karaoke</option>
+            <option value="apple">apple</option>
           </select>
           <label>Choose theme</label>
         </div>
@@ -139,6 +140,16 @@
           </div>
           
           
+        </div>
+      </div>
+
+      <div class="row center" id="mode-row" style="display: none;">
+        <div class="input-field col s12 m8 offset-m2">
+          <select id="mode-select">
+            <option value="light" selected>Light</option>
+            <option value="dark">Dark</option>
+          </select>
+          <label>Choose mode</label>
         </div>
       </div>
 
@@ -244,14 +255,29 @@
     });
 
     $('#theme-select').change(function() {
+      // Reset visibility defaults
       $('.bar-color').show();
+      $('#mode-row').hide();
+
+      // Trigger color inputs to keep in sync when visible
       $('#bar_color').trigger('change');
       $('#bar_color_cover').trigger('change');
-      if (['compact', 'karaoke'].includes(this.value)) {
+
+      // Hide bar-color controls for themes that don't use them
+      if (['compact', 'karaoke', 'apple'].includes(this.value)) {
         $('.bar-color').hide();
-        delete urlParams.bar_color_cover
-        delete urlParams.bar_color
+        delete urlParams.bar_color_cover;
+        delete urlParams.bar_color;
       }
+
+      // Manage Apple-specific mode selector and param
+      if (this.value === 'apple') {
+        $('#mode-row').show();
+        urlParams.mode = $('#mode-select').val();
+      } else {
+        delete urlParams.mode;
+      }
+
       urlParams.theme = this.value;
       updateUrl();
     });
@@ -271,8 +297,18 @@
       updateUrl();
     });
 
+    $('#mode-select').change(function() {
+      if ($('#theme-select').val() === 'apple') {
+        urlParams.mode = this.value;
+      } else {
+        delete urlParams.mode;
+      }
+      updateUrl();
+    });
+ 
     $(document).ready(function(){
       $('#theme-select').formSelect();
+      $('#mode-select').formSelect();
     });
   </script>
 
