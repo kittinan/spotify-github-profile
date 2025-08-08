@@ -75,6 +75,45 @@ def encode_html_entities(text):
     return html.escape(text)
 
 
+def format_time_ms(milliseconds):
+    """Convert milliseconds to MM:SS format"""
+    if milliseconds is None or milliseconds < 0:
+        return "0:00"
+
+    seconds = milliseconds // 1000
+    minutes = seconds // 60
+    seconds = seconds % 60
+
+    return f"{minutes}:{seconds:02d}"
+
+
+def calculate_progress_data(progress_ms, duration_ms):
+    """Calculate progress percentage and formatted times"""
+    if not progress_ms or not duration_ms or duration_ms <= 0:
+        return {
+            "progress_percentage": 0,
+            "current_time": "0:00",
+            "remaining_time": "0:00",
+        }
+
+    # Ensure progress doesn't exceed duration
+    progress_ms = min(progress_ms, duration_ms)
+
+    # Calculate percentage
+    progress_percentage = (progress_ms / duration_ms) * 100
+
+    # Format times
+    current_time = format_time_ms(progress_ms)
+    remaining_ms = duration_ms - progress_ms
+    remaining_time = f"-{format_time_ms(remaining_ms)}"
+
+    return {
+        "progress_percentage": progress_percentage,
+        "current_time": current_time,
+        "remaining_time": remaining_time,
+    }
+
+
 # @functools.lru_cache(maxsize=128)
 def make_svg(
     artist_name,
@@ -86,6 +125,9 @@ def make_svg(
     bar_color,
     show_offline,
     background_color,
+    mode,
+    progress_ms=None,
+    duration_ms=None,
 ):
     height = 0
     num_bar = 75
@@ -105,6 +147,9 @@ def make_svg(
     elif theme == "novatorem":
         height = 100
         num_bar = 100
+    elif theme == "apple":
+        height = 534
+        num_bar = 0
     else:
         if cover_image:
             height = 445
@@ -124,6 +169,16 @@ def make_svg(
         content_bar = ""
         css_bar = generate_css_bar(num_bar)
 
+    # Calculate progress data for Apple theme
+    progress_data = {}
+    if theme == "apple" and duration_ms is not None:
+        if is_now_playing and progress_ms is not None:
+            # Currently playing - show real progress
+            progress_data = calculate_progress_data(progress_ms, duration_ms)
+        else:
+            # Recently played - show 0 progress but real duration
+            progress_data = calculate_progress_data(0, duration_ms)
+
     rendered_data = {
         "height": height,
         "num_bar": num_bar,
@@ -136,6 +191,9 @@ def make_svg(
         "cover_image": cover_image,
         "bar_color": bar_color,
         "background_color": background_color,
+        "mode": mode,
+        "is_now_playing": is_now_playing,
+        "progress_data": progress_data,
     }
 
     return render_template(f"spotify.{theme}.html.j2", **rendered_data)
@@ -183,6 +241,7 @@ def get_access_token(uid):
 
     current_ts = int(time())
     access_token = token_info.get("access_token", None)
+    print(access_token)
 
     # Check token expired
     expired_ts = token_info.get("expired_ts")
@@ -223,6 +282,8 @@ def get_song_info(uid, show_offline):
 
     item = None
     is_now_playing = False
+    progress_ms = None
+    duration_ms = None
 
     # Handle refrest_token revoke or invalid token
     if access_token is None:
@@ -234,22 +295,30 @@ def get_song_info(uid, show_offline):
         item = data["item"]
         item["currently_playing_type"] = data["currently_playing_type"]
         is_now_playing = True
+
+        # Extract progress data for currently playing tracks
+        progress_ms = data.get("progress_ms")
+        if item and item.get("duration_ms"):
+            duration_ms = item["duration_ms"]
     elif show_offline:
-        return None, False
+        return None, False, None, None
     else:
         recent_plays = spotify.get_recently_play(access_token)
         size_recent_play = len(recent_plays["items"])
 
         # Handle empty recently play, should offline
         if size_recent_play == 0:
-            return None, False
+            return None, False, None, None
 
         idx = random.randint(0, size_recent_play - 1)
         item = recent_plays["items"][idx]["track"]
         item["currently_playing_type"] = "track"
         is_now_playing = False
+        # No progress data for recently played tracks, but get duration
+        if item and item.get("duration_ms"):
+            duration_ms = item["duration_ms"]
 
-    return item, is_now_playing
+    return item, is_now_playing, progress_ms, duration_ms
 
 
 @app.route("/", defaults={"path": ""})
@@ -266,13 +335,16 @@ def catch_all(path):
     )
     show_offline = request.args.get("show_offline", default="false") == "true"
     interchange = request.args.get("interchange", default="false") == "true"
+    mode = request.args.get("mode", default="light")
 
     # Handle invalid request
     if not uid:
         return Response("not ok")
 
     try:
-        item, is_now_playing = get_song_info(uid, show_offline)
+        item, is_now_playing, progress_ms, duration_ms = get_song_info(
+            uid, show_offline
+        )
     except spotify.InvalidTokenError as e:
 
         # Handle invalid token
@@ -299,6 +371,9 @@ def catch_all(path):
             bar_color,
             show_offline,
             background_color,
+            mode,
+            progress_ms,
+            duration_ms,
         )
         resp = Response(svg, mimetype="image/svg+xml")
         resp.headers["Cache-Control"] = "s-maxage=1"
@@ -367,6 +442,9 @@ def catch_all(path):
         bar_color,
         show_offline,
         background_color,
+        mode,
+        progress_ms,
+        duration_ms,
     )
 
     resp = Response(svg, mimetype="image/svg+xml")

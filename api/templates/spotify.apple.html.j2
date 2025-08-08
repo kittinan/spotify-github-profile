@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="345" height="534">
+  <foreignObject width="343" height="534">
+    <style>
+      .container {
+        border-radius: 12px;
+        {% if mode == 'dark' %}
+        background-color: #1a1a1a;
+        {% else %}
+        background-color: #f8f8fa;
+        {% endif %}
+        padding: 24px;
+        height: 486px;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      }
+      .text-gray-500 {
+        {% if mode == 'dark' %}
+        color: #f2f2f2;
+        {% else %}
+        color: #6b7280;
+        {% endif %}
+      }
+      .text-gray-600 {
+        {% if mode == 'dark' %}
+        color: #acacac;
+        {% else %}
+        color: #4b5563;
+        {% endif %}
+      }
+      .text-gray-900 {
+        {% if mode == 'dark' %}
+        color: #818181;
+        {% else %}
+        color: #111827;
+        {% endif %}
+      }
+      .cover-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 288px;
+        height: 288px;
+        margin: 0 auto;
+      }
+      .cover-image {
+        max-width: 288px;
+        max-height: 288px;
+        border-radius: 12px;
+        {% if mode == 'dark' %}
+        box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px #42454a, 0 4px 6px -4px #42454a;
+        {% else %}
+        box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px #9ca3af, 0 4px 6px -4px #9ca3af;
+        {% endif %}
+      }
+      img.cover-image {
+        width: auto;
+        overflow: hidden;
+      }
+      div.cover-image {
+        {% if mode == 'dark' %}
+        background-color: #383a3c;
+        {% else %}
+        background-color: #d1d5db;
+        {% endif %}
+        width: 288px;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        line-height: 1;
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+      .apple-music-logo {
+        height: 16px;
+        margin-bottom: 4px;
+        margin-right: 6px;
+        color: #fc3c44;
+      }
+      .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .content {
+        margin-top: 20px;
+      }
+      .song-title {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 28px;
+        margin: 0;
+      }
+      .song-artist {
+        font-size: 16px;
+        line-height: 24px;
+        margin: -2px 0 0;
+        font-weight: inherit;
+      }
+      .slider {
+        margin-top: 12px;
+      }
+      .slider-pill {
+        width: 100%;
+        height: 8px;
+        {% if mode == 'dark' %}
+        background-color: #353638;
+        {% else %}
+        background-color: #d1d5db;
+        {% endif %}
+        border-radius: 9999px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+      .slider-pill-inner {
+        height: 100%;
+        {% if mode == 'dark' %}
+        background-color: #a8b1bc;
+        {% else %}
+        background-color: #4b5563;
+        {% endif %}
+      }
+      .slider-container {
+        display: flex;
+        justify-content: space-between;
+      }
+      .slider-content {
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0;
+      }
+      .player-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 52px;
+      }
+      .player-spacer {
+        margin: 0 28px;
+      }
+      .player-item {
+        width: 38px;
+        height: 38px;
+        {% if mode == 'dark' %}
+        color: #f2f2f2;
+        {% endif %}
+      }
+    </style>
+    <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+      <div class="header">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="apple-music-logo" viewBox="0 0 88 22">
+          <path d="M81.95 7.43c3.59 0 5.77 2.33 6.02 5.1h-2.72a3.17 3.17 0 0 0-3.28-2.7c-2.2 0-3.66 1.86-3.66 4.88 0 3.08 1.47 4.87 3.7 4.87 1.75 0 2.9-.97 3.24-2.6H88c-.3 3-2.68 5.02-6.03 5.02-3.98 0-6.58-2.75-6.58-7.29 0-4.46 2.6-7.28 6.56-7.28zm-19.61 0c3.24 0 5.35 1.82 5.44 4.41h-2.69c-.16-1.36-1.15-2.22-2.75-2.22-1.55 0-2.59.77-2.59 1.89 0 .88.64 1.48 2.15 1.83l2.26.52c2.85.66 3.94 1.79 3.94 3.81 0 2.57-2.37 4.33-5.66 4.33-3.48 0-5.57-1.72-5.84-4.4h2.84c.26 1.48 1.25 2.2 3 2.2 1.72 0 2.78-.72 2.78-1.87 0-.91-.51-1.44-2.04-1.8l-2.26-.52c-2.65-.62-3.96-1.9-3.96-3.94 0-2.51 2.17-4.24 5.38-4.24zm-17 .26v8.53c0 2.14 1.01 3.28 2.99 3.28 2.06 0 3.3-1.44 3.3-3.63V7.7h2.87v14.04h-2.74v-2.37h-.07C50.92 21.05 49.5 22 47.37 22c-3.03 0-4.88-2-4.88-5.21v-9.1h2.86zm-33.1-1.65h.3c.66.06 2.57.27 3.79 2.09-.1.08-2.27 1.33-2.24 3.98.02 3.16 2.75 4.21 2.77 4.24-.02.07-.43 1.49-1.42 2.95-.87 1.28-1.76 2.54-3.18 2.57-1.38.02-1.84-.82-3.42-.82-1.58 0-2.08.8-3.38.84-1.38.05-2.42-1.36-3.29-2.64C.4 16.65-.96 11.93.87 8.75c.9-1.6 2.53-2.6 4.28-2.63 1.35-.02 2.6.9 3.41.9.82 0 2.27-1.07 3.98-.97zm11.41-3.57 6.19 15.35h.1l6.18-15.35h3.44v19.26h-2.71V7.56h-.1L31 21.73h-2.2L23.02 7.56h-.1v14.17h-2.7V2.47h3.43zm49.52 5.22v14.04H70.3V7.7h2.86zM12.55 1a4.72 4.72 0 0 1-1.07 3.35c-.74.87-1.92 1.57-3.1 1.47a4.42 4.42 0 0 1 1.1-3.22A4.6 4.6 0 0 1 12.56 1zm59.19 1.32c.91 0 1.64.74 1.64 1.66a1.65 1.65 0 1 1-3.3 0c0-.92.74-1.66 1.66-1.66z" fill-rule="nonzero" />
+        </svg>
+        <span class="text-gray-600">· {{ title_text }}</span>
+      </div>
+      <div class="cover-image-container">
+        {% if cover_image and img %}
+          <img class="cover-image" src="data:image/jpeg;base64,{{img}}" />
+        {% else %}
+          <div class="cover-image"></div>
+        {% endif %}
+      </div>
+      <div class="content">
+        <h1 class="song-title text-gray-900 truncate">{{song_name}}</h1>
+        <h2 class="song-artist text-gray-500 truncate">{{artist_name}}</h2>
+      </div>
+      <div class="slider">
+        <div class="slider-pill">
+          {% if progress_data %}
+            <div class="slider-pill-inner" style="width:{{ progress_data.progress_percentage }}%"></div>
+          {% else %}
+            <div class="slider-pill-inner" style="width:33.33%"></div>
+          {% endif %}
+        </div>
+        <div class="slider-container">
+          {% if progress_data %}
+            <p class="slider-content text-gray-600">{{ progress_data.current_time }}</p>
+            <p class="slider-content text-gray-600">{{ progress_data.remaining_time }}</p>
+          {% else %}
+            <p class="slider-content text-gray-600">1:14</p>
+            <p class="slider-content text-gray-600">-2:28</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="player-container text-gray-900">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="player-item" viewBox="0 0 24 24">
+          <path d="M9.195 18.44c1.25.713 2.805-.19 2.805-1.629v-2.34l6.945 3.968c1.25.714 2.805-.188 2.805-1.628V8.688c0-1.44-1.555-2.342-2.805-1.628L12 11.03V8.69c0-1.44-1.555-2.343-2.805-1.629l-7.108 4.062c-1.26.72-1.26 2.536 0 3.256l7.108 4.061z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="player-item player-spacer" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25z" clip-rule="evenodd" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="player-item" viewBox="0 0 24 24">
+          <path d="M5.055 7.06c-1.25-.714-2.805.189-2.805 1.628v8.123c0 1.44 1.555 2.342 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.342 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256L14.805 7.06C13.555 6.346 12 7.25 12 8.688v2.34L5.055 7.06z" />
+        </svg>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
