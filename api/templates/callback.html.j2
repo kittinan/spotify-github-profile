@@ -88,12 +88,6 @@
         </div>
         <div class="col s12 m3">
           <label class="row">
-            <input type="checkbox" class="filled-in" id="org-mode-checkbox" />
-            <span>Org-Mode Snippet</span>
-          </label>
-        </div>
-        <div class="col s12 m3">
-          <label class="row">
             <input type="checkbox" class="filled-in" id="show-offline-checkbox" />
             <span>Show Offline</span>
           </label>
@@ -214,10 +208,9 @@
       interchange:false
     };
     var openSong = false;
-    var orgMode = false;
 
     function updateUrl() {
-      var viewUrl = `{{BASE_URL}}/view${orgMode ? '.svg': ''}?`;
+      var viewUrl = `{{BASE_URL}}/view?`;
       var viewUrlWithParams = viewUrl + $.param(urlParams, true);
       var url = "https://github.com/kittinan/spotify-github-profile";
       if (openSong) {
@@ -225,7 +218,7 @@
       }
 
       exampleView.attr('src', viewUrlWithParams);
-      markdownCodeTextArea.text(orgMode ? `[[${url}][${viewUrlWithParams})]]`: `[![spotify-github-profile](${viewUrlWithParams})](${url})`);
+      markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](${url})`);
     }
 
     updateUrl();
@@ -244,10 +237,6 @@
       updateUrl();
     });
 
-    $("#org-mode-checkbox").change(function() {
-      orgMode = this.checked;
-      updateUrl();
-    });
 
     $("#show-offline-checkbox").change(function() {
       urlParams.show_offline = this.checked;
