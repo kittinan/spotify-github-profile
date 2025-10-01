@@ -53,6 +53,9 @@ Please replace your old endpoint `https://spotify-github-profile.vercel.app` to 
 
 ![spotify-github-profile](/img/karaoke.svg)
 
+- Spotify Embed theme (NEW!)
+
+![spotify-github-profile](/img/spotify-embed.svg)
 
 
 ## Running for development locally
