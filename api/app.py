@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 import importlib
 
 # Import legacy handlers (order matters for Firebase init)
@@ -12,6 +12,11 @@ view_handler = view_module.catch_all
 view_svg_handler = view_handler  # view.svg.py is identical to view.py
 
 app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return redirect("/api/login")
 
 
 @app.route("/api/login", defaults={"path": ""})
