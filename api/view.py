@@ -49,8 +49,17 @@ def generate_css_bar(num_bar=75):
 
 @functools.lru_cache(maxsize=128)
 def load_image(url):
-    resposne = requests.get(url)
-    return resposne.content
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        return response.content
+    except requests.exceptions.RequestException as e:
+        print(f"Error loading image from {url}: {e}")
+        # Return a placeholder or None to handle gracefully
+        return None
+    except Exception as e:
+        print(f"Unexpected error loading image: {e}")
+        return None
 
 
 def to_img_b64(content):
@@ -150,6 +159,9 @@ def make_svg(
     elif theme == "apple":
         height = 534
         num_bar = 0
+    elif theme == "spotify-embed":
+        height = 152
+        num_bar = 0
     else:
         if cover_image:
             height = 445
@@ -169,9 +181,9 @@ def make_svg(
         content_bar = ""
         css_bar = generate_css_bar(num_bar)
 
-    # Calculate progress data for Apple theme
+    # Calculate progress data for Apple and Spotify Embed themes
     progress_data = {}
-    if theme == "apple" and duration_ms is not None:
+    if theme in ["apple", "spotify-embed"] and duration_ms is not None:
         if is_now_playing and progress_ms is not None:
             # Currently playing - show real progress
             progress_data = calculate_progress_data(progress_ms, duration_ms)
@@ -393,17 +405,23 @@ def catch_all(path):
         elif currently_playing_type == "episode":
             img = load_image(item["images"][1]["url"])
 
-        img_b64 = to_img_b64(img)
+        # Only convert to base64 if image was successfully loaded
+        if img is not None:
+            img_b64 = to_img_b64(img)
 
     # Extract cover image color
-    if is_bar_color_from_cover and img:
+    if is_bar_color_from_cover and img is not None:
 
         is_skip_dark = False
         if theme in ["default"]:
             is_skip_dark = True
 
-        pil_img = Image.open(io.BytesIO(img))
-        colors = colorgram.extract(pil_img, 5)
+        try:
+            pil_img = Image.open(io.BytesIO(img))
+            colors = colorgram.extract(pil_img, 5)
+        except Exception as e:
+            print(f"Error extracting colors from image: {e}")
+            colors = []
 
         for color in colors:
 
