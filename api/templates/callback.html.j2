@@ -70,7 +70,7 @@
     <div class="container">
       <br><br>
       <div class="row center">
-        <h2 class="header center orange-text">Markdown code</h2>
+        <h2 class="header center orange-text">Markdown Code</h2>
       </div>
 
       <div class="row center">
@@ -168,6 +168,29 @@
       <div class="row center">
         <img id="example-view" />
       </div>
+
+      <div class="row center">
+        <h2 class="header center orange-text">HTML Code</h2>
+      </div>
+
+      <div class="row center">
+        <div class="col s0 m1"></div>
+        <div class="col s12 m10">
+          <textarea id="html-code"
+            style="width: 100%;height: 100px; padding: 10px;"></textarea>
+        </div>
+        <div class="col s0 m1"></div>
+      </div>
+
+      <div class="row center">
+        <div style="margin-top: 20px; margin-bottom: 20px;">
+          <button class="waves-effect waves-light btn green darken-3" data-clipboard-target="#html-code">
+            <i class="material-icons left">content_copy</i> Copy to clipboard
+          </button>
+        </div>
+      </div>
+
+      
       <br><br>
 
     </div>
@@ -199,6 +222,7 @@
   <script>
     var uid = "{{uid}}";
     var markdownCodeTextArea = $('#markdown-code');
+    var htmlCodeTextArea = $('#html-code');
     var exampleView = $("#example-view");
     var urlParams = {
       uid: uid,
@@ -220,6 +244,14 @@
 
       exampleView.attr('src', viewUrlWithParams);
       markdownCodeTextArea.text(`[![spotify-github-profile](${viewUrlWithParams})](${url})`);
+      
+      // Generate HTML code
+      var htmlCode = `<p align="center">
+  <a href="${url}">
+    <img src="${viewUrlWithParams}">
+  </a>
+</p>`;
+      htmlCodeTextArea.text(htmlCode);
     }
 
     updateUrl();
