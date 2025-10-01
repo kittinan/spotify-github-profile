@@ -57,8 +57,28 @@ Please replace your old endpoint `https://spotify-github-profile.vercel.app` to 
 
 ![spotify-github-profile](/img/spotify-embed.svg)
 
+## Running for development locally without Vercel
 
-## Running for development locally
+To run the application locally without Vercel:
+
+1. Copy `.env.example` to `.env` in the root directory and replace the placeholder values with your actual configuration.
+
+2. Install the required dependencies:
+   ```sh
+   pip install -r api/requirements.txt
+   ```
+
+3. Run the application:
+   ```sh
+   python api/app.py
+   ```
+
+4. Access the login page at http://localhost:3000/api/login
+
+Note: Ensure your Spotify app's redirect URI is set to `http://localhost:3000/api/callback` and `BASE_URL` in `.env` is set to `http://localhost:3000/api`.
+
+
+## Running for development locally with Vercel
 
 To develop locally, you need:
 

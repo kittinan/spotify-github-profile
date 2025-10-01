@@ -18,7 +18,8 @@ firebase_config = os.getenv("FIREBASE")
 firebase_dict = json.loads(b64decode(firebase_config))
 
 cred = credentials.Certificate(firebase_dict)
-firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
