@@ -131,6 +131,28 @@ Vercel CLI 20.1.2 dev (beta) — https://vercel.com/feedback
 
 - Now try to access http://localhost:3000/api/login
 
+### Run unittest
+
+- Run all tests
+```sh
+pytest tests/ -v
+```
+
+- Run tests with coverage
+```sh
+pytest tests/ --cov=api --cov-report=html
+```
+
+- Run specific test file
+```sh
+pytest tests/test_api_view.py -v
+```
+
+- Run with maxfail (like CI)
+```sh
+pytest tests/ --maxfail=5 --disable-warnings -v
+```
+
 ## How to Contribute
 
 - Develop locally and submit a pull request!

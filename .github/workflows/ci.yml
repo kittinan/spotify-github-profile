@@ -3,13 +3,12 @@ name: Python Flask CI/CD
 on:
   pull_request:
     branches:
-      - master   # รันเวลาเปิด PR เข้ามาที่ master (default branch)
-      - main     # รองรับทั้ง main และ master
+      - master
+      - main
   push:
     branches:
-      - master   # รันตอน merge เข้า master เพื่อ deploy
-      - main     # รองรับทั้ง main และ master
-      - feature/add-unittest  # รันสำหรับ feature branch นี้
+      - master
+      - main
 
 jobs:
   build-and-test:
@@ -17,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.11', '3.12']  # ทดสอบหลาย Python versions
+        python-version: ['3.11', '3.12']
 
     steps:
       - name: Checkout repo
@@ -76,11 +75,10 @@ jobs:
 
       - name: Test summary
         run: |
-          echo "✅ All tests passed successfully!"
-          echo "📊 Coverage report generated"
-          echo "🎉 Ready for deployment"
+          echo "All tests passed successfully!"
+          echo "Coverage report generated"
+          echo "Ready for deployment"
 
-  # Job สำหรับตรวจสอบ security vulnerabilities
   security-check:
     runs-on: ubuntu-latest
     needs: build-and-test
@@ -110,7 +108,6 @@ jobs:
           bandit -r api/ -f json -o bandit-report.json
         continue-on-error: true
 
-  # Job สำหรับตรวจสอบ code quality
   code-quality:
     runs-on: ubuntu-latest
     needs: build-and-test
@@ -145,7 +142,6 @@ jobs:
           mypy api/ --ignore-missing-imports
         continue-on-error: true
 
-  # Job แสดงสรุปผลการ build
   build-summary:
     runs-on: ubuntu-latest
     needs: [build-and-test, security-check, code-quality]
@@ -154,15 +150,15 @@ jobs:
     steps:
       - name: Build Summary
         run: |
-          echo "🔍 CI/CD Pipeline Summary:"
-          echo "✅ Tests: ${{ needs.build-and-test.result }}"
-          echo "🔒 Security: ${{ needs.security-check.result }}"
-          echo "📝 Code Quality: ${{ needs.code-quality.result }}"
+          echo "CI/CD Pipeline Summary:"
+          echo "Tests: ${{ needs.build-and-test.result }}"
+          echo "Security: ${{ needs.security-check.result }}"
+          echo "Code Quality: ${{ needs.code-quality.result }}"
           
           if [[ "${{ needs.build-and-test.result }}" == "success" ]]; then
-            echo "🎉 Build completed successfully!"
+            echo "Build completed successfully!"
             echo "Ready for merge/deployment 🚀"
           else
-            echo "❌ Build failed. Please check the logs."
+            echo "Build failed. Please check the logs."
             exit 1
           fi
