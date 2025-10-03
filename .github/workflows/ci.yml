@@ -45,13 +45,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r api/requirements.txt
 
-      - name: Create test environment file
-        run: |
-          touch .env
-          echo "SPOTIFY_CLIENT_ID=test_client_id" >> .env
-          echo "SPOTIFY_CLIENT_SECRET=test_client_secret" >> .env
-          echo "REDIRECT_URI=http://localhost:5000/callback" >> .env
-
       - name: Run linting (optional)
         run: |
           pip install flake8
@@ -62,6 +55,11 @@ jobs:
         continue-on-error: true
 
       - name: Run tests with coverage
+        env:
+          SPOTIFY_CLIENT_ID: test_client_id
+          SPOTIFY_CLIENT_SECRET: test_client_secret
+          REDIRECT_URI: http://localhost:5000/callback
+          TESTING: "true"
         run: |
           pytest tests/ --maxfail=5 --disable-warnings -v --cov=api --cov-report=xml --cov-report=html
 
