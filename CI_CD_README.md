@@ -32,7 +32,7 @@ Tests run on multiple Python versions:
 - Requests 2.32.5
 - Firebase Admin 7.1.0
 - Pillow 11.3.0
-- And more (see `requirements.txt`)
+- And more (see `api/requirements.txt`)
 
 #### Test Dependencies  
 - pytest 8.4.2
@@ -77,7 +77,7 @@ Automated code quality checks include:
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 
 # Run all tests
 pytest tests/ -v
