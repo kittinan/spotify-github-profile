@@ -129,3 +129,21 @@ dmypy.json
 .pyre/
 
 .vercel
+
+# CI/CD and Testing
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+bandit-report.json
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Security scanning
+.bandit
+safety-report.json
