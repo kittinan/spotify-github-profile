@@ -63,6 +63,8 @@ def load_image(url):
 
 
 def to_img_b64(content):
+    if content is None:
+        return ""
     return b64encode(content).decode("ascii")
 
 
@@ -433,7 +435,7 @@ def catch_all(path):
                 # Skip to use bar in dark color
                 continue
 
-            bar_color = "%02x%02x%02x" % rgb
+            bar_color = "%02x%02x%02x" % (rgb.r, rgb.g, rgb.b)
             break
 
     # Find artist_name and song_name
