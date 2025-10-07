@@ -3,6 +3,7 @@ from base64 import b64decode, b64encode
 from dotenv import load_dotenv, find_dotenv
 
 from util.firestore import get_firestore_db
+from util.profanity import profanity_check
 
 load_dotenv(find_dotenv())
 
@@ -350,6 +351,7 @@ def catch_all(path):
     show_offline = request.args.get("show_offline", default="false") == "true"
     interchange = request.args.get("interchange", default="false") == "true"
     mode = request.args.get("mode", default="light")
+    is_enable_profanity = request.args.get("profanity", default="false") == "true"
 
     # Handle invalid request
     if not uid:
@@ -446,6 +448,11 @@ def catch_all(path):
     elif currently_playing_type == "episode":
         artist_name = item["show"]["publisher"]
         song_name = item["name"]
+
+    # Handle profanity filtering
+    if is_enable_profanity:
+        artist_name = profanity_check(artist_name)
+        song_name = profanity_check(song_name)
 
     if interchange:
         x = artist_name

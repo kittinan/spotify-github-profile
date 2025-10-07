@@ -8,6 +8,7 @@ Pillow==11.3.0
 colorgram.py==1.2.0
 markupsafe==3.0.3
 gunicorn==23.0.0
+profanityfilter==2.1.0
 
 # Test dependencies for CI/CD
 pytest==8.4.2
