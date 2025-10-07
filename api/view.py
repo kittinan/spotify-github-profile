@@ -1,9 +1,9 @@
 from flask import Flask, Response, jsonify, render_template, redirect, request
 from base64 import b64decode, b64encode
 from dotenv import load_dotenv, find_dotenv
-from profanityfilter import ProfanityFilter
 
 from util.firestore import get_firestore_db
+from util.profanity import profanity_check
 
 load_dotenv(find_dotenv())
 
@@ -20,7 +20,7 @@ import functools
 import colorgram
 import math
 import html
-pf=ProfanityFilter()
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 print("Starting Server")
@@ -147,7 +147,6 @@ def make_svg(
     # Sanitize input
     artist_name = encode_html_entities(artist_name)
     song_name = encode_html_entities(song_name)
-
 
     if theme == "compact":
         if cover_image:
@@ -339,29 +338,6 @@ def get_song_info(uid, show_offline):
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
-def profanity_check_n(name):
-    return pf.censor(name)
-def profanity_check(name):
-    if not pf.is_clean(name):
-        censored_name = pf.censor(name) 
-        name_list = list(censored_name)
-        
-        if len(name_list) > 0:
-            for i in range(0, len(name)):
-                if name_list[i]=='*' and i<len(name)-1 and name_list[i+1]=='*':
-                    name_list[i] = name[i]
-                    break
-        if len(name_list) > 1:
-            for i in range( len(name)-1,-1,-1):
-                if name_list[i]=='*' and i>0 and name_list[i-1]=='*':
-                    name_list[i] = name[i]
-                    break
-            
-                
-        return "".join(name_list)
-        
-    return name
-
 def catch_all(path):
     uid = request.args.get("uid")
     cover_image = request.args.get("cover_image", default="true") == "true"
@@ -375,6 +351,7 @@ def catch_all(path):
     show_offline = request.args.get("show_offline", default="false") == "true"
     interchange = request.args.get("interchange", default="false") == "true"
     mode = request.args.get("mode", default="light")
+    is_enable_profanity = request.args.get("profanity", default="false") == "true"
 
     # Handle invalid request
     if not uid:
@@ -466,14 +443,16 @@ def catch_all(path):
     # Find artist_name and song_name
     if currently_playing_type == "track":
         artist_name = item["artists"][0]["name"]
-
         song_name = item["name"]
 
     elif currently_playing_type == "episode":
         artist_name = item["show"]["publisher"]
         song_name = item["name"]
-    artist_name=profanity_check(artist_name)
-    song_name=profanity_check(song_name)    
+
+    # Handle profanity filtering
+    if is_enable_profanity:
+        artist_name = profanity_check(artist_name)
+        song_name = profanity_check(song_name)
 
     if interchange:
         x = artist_name
