@@ -99,6 +99,12 @@
               <span>Interchange Artist with Song name</span>
             </label>
           </div>
+        <div class="col s12 m3">
+          <label class="row">
+            <input type="checkbox" class="filled-in" id="profanity-checkbox" />
+            <span>Censor Profanity</span>
+          </label>
+        </div>
       </div>
 
       <div class="row center">
@@ -230,7 +236,8 @@
       theme: 'default',
       show_offline: false,
       background_color: "121212",
-      interchange:false
+      interchange:false,
+      profanity: false
     };
     var openSong = false;
 
@@ -273,6 +280,11 @@
 
     $("#show-offline-checkbox").change(function() {
       urlParams.show_offline = this.checked;
+      updateUrl();
+    });
+
+    $("#profanity-checkbox").change(function() {
+      urlParams.profanity = this.checked;
       updateUrl();
     });
 
