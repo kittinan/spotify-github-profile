@@ -412,9 +412,12 @@ def catch_all(path):
         # Only convert to base64 if image was successfully loaded
         if img is not None:
             img_b64 = to_img_b64(img)
+        if img is None:
+            img_b64=to_img_b64('img/offline.png')    
 
     # Extract cover image color
-    if is_bar_color_from_cover and img is not None:
+    if is_bar_color_from_cover :
+        
 
         is_skip_dark = False
         if theme in ["default"]:
