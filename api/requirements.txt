@@ -1,6 +1,6 @@
 # API dependencies
 Flask==3.1.2
-Werkzeug==3.1.3
+Werkzeug==3.1.4
 requests==2.32.5
 python-dotenv==1.1.1
 firebase-admin==7.1.0
