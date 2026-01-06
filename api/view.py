@@ -138,6 +138,7 @@ def make_svg(
     show_offline,
     background_color,
     mode,
+    border_radius="10",
     progress_ms=None,
     duration_ms=None,
 ):
@@ -209,6 +210,7 @@ def make_svg(
         "mode": mode,
         "is_now_playing": is_now_playing,
         "progress_data": progress_data,
+        "border_radius": border_radius,
     }
 
     return render_template(f"spotify.{theme}.html.j2", **rendered_data)
@@ -351,6 +353,7 @@ def catch_all(path):
     show_offline = request.args.get("show_offline", default="false") == "true"
     interchange = request.args.get("interchange", default="false") == "true"
     mode = request.args.get("mode", default="light")
+    border_radius = request.args.get("border_radius", default="10")
     is_enable_profanity = request.args.get("profanity", default="false") == "true"
 
     # Handle invalid request
@@ -388,6 +391,7 @@ def catch_all(path):
             show_offline,
             background_color,
             mode,
+            border_radius,
             progress_ms,
             duration_ms,
         )
@@ -470,6 +474,7 @@ def catch_all(path):
         show_offline,
         background_color,
         mode,
+        border_radius,
         progress_ms,
         duration_ms,
     )
