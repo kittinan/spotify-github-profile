@@ -48,10 +48,9 @@ def test_ping_with_path(client):
     assert data['message'] == 'Not found'
 
 
-@pytest.mark.parametrize("path", ['/'])
-def test_multiple_paths(client, path):
+def test_root_path(client):
     """Test that root path returns pong properly."""
-    response = client.get(path)
+    response = client.get('/')
     
     assert response.status_code == 200
     data = response.get_json()
@@ -112,15 +111,6 @@ def test_special_characters_in_path_return_404(client, path):
     assert response.status_code == 404
     data = response.get_json()
     assert data['status'] == 'error'
-
-
-@pytest.mark.parametrize("path", ['/'])
-def test_case_sensitivity(client, path):
-    """Test that root path returns success."""
-    response = client.get(path)
-    assert response.status_code == 200
-    data = response.get_json()
-    assert data['status'] == 'ok'
 
 
 def test_response_headers(client):
@@ -185,14 +175,6 @@ def test_no_redirect(client):
     # Should be a direct response, not a redirect
     assert response.status_code == 200
     assert not (300 <= response.status_code < 400)
-
-
-@pytest.mark.parametrize("path", ['/'])
-def test_always_returns_ok_status(client, path):
-    """Test that root path returns 'ok' status."""
-    response = client.get(path)
-    data = response.get_json()
-    assert data['status'] == 'ok'
 
 
 def test_response_time_reasonable(client):
