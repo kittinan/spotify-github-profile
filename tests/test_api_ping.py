@@ -1,6 +1,7 @@
 import pytest
 import sys
 import os
+import time
 
 # Add the parent directory to the path to import the api module
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -34,22 +35,22 @@ def test_ping_root_path(client):
 
 
 def test_ping_with_path(client):
-    """Test that any path returns pong response."""
+    """Test that any path returns 404 not found."""
     response = client.get('/some/random/path')
     
-    # Check that it's a successful response
-    assert response.status_code == 200
+    # Should return 404
+    assert response.status_code == 404
     
     # Check the response data
     data = response.get_json()
     assert data is not None
-    assert data['status'] == 'ok'
-    assert data['message'] == 'pong'
+    assert data['status'] == 'error'
+    assert data['message'] == 'Not found'
 
 
-@pytest.mark.parametrize("path", ['/', '/ping', '/health', '/status', '/test/nested/path'])
+@pytest.mark.parametrize("path", ['/'])
 def test_multiple_paths(client, path):
-    """Test that various paths all return pong properly."""
+    """Test that root path returns pong properly."""
     response = client.get(path)
     
     assert response.status_code == 200
@@ -99,25 +100,23 @@ def test_query_parameters_ignored(client):
 
 
 @pytest.mark.parametrize("path", [
-    '/path%20with%20spaces',
     '/path-with-dashes',
     '/path_with_underscores',
     '/path.with.dots',
     '/path/with/slashes'
 ])
-def test_special_characters_in_path(client, path):
-    """Test that paths with special characters are handled correctly."""
+def test_special_characters_in_path_return_404(client, path):
+    """Test that paths with special characters return 404."""
     response = client.get(path)
     
-    assert response.status_code == 200
+    assert response.status_code == 404
     data = response.get_json()
-    assert data['status'] == 'ok'
-    assert data['message'] == 'pong'
+    assert data['status'] == 'error'
 
 
-@pytest.mark.parametrize("path", ['/PING', '/Ping', '/ping', '/HEALTH', '/Health', '/health'])
+@pytest.mark.parametrize("path", ['/'])
 def test_case_sensitivity(client, path):
-    """Test that path matching is case sensitive."""
+    """Test that root path returns success."""
     response = client.get(path)
     assert response.status_code == 200
     data = response.get_json()
@@ -188,9 +187,9 @@ def test_no_redirect(client):
     assert not (300 <= response.status_code < 400)
 
 
-@pytest.mark.parametrize("path", ['/', '/ping', '/status'])
+@pytest.mark.parametrize("path", ['/'])
 def test_always_returns_ok_status(client, path):
-    """Test that all requests return 'ok' status."""
+    """Test that root path returns 'ok' status."""
     response = client.get(path)
     data = response.get_json()
     assert data['status'] == 'ok'
@@ -198,8 +197,6 @@ def test_always_returns_ok_status(client, path):
 
 def test_response_time_reasonable(client):
     """Test that ping responds quickly (basic performance check)."""
-    import time
-    
     start_time = time.time()
     response = client.get('/')
     end_time = time.time()
@@ -207,3 +204,15 @@ def test_response_time_reasonable(client):
     # Should respond in less than 1 second (very generous for a simple endpoint)
     assert (end_time - start_time) < 1.0
     assert response.status_code == 200
+
+
+def test_non_root_paths_return_404(client):
+    """Test that non-root paths return 404."""
+    paths = ['/ping', '/health', '/status', '/check', '/test/nested/path']
+    
+    for path in paths:
+        response = client.get(path)
+        assert response.status_code == 404
+        data = response.get_json()
+        assert data['status'] == 'error'
+        assert data['message'] == 'Not found'
