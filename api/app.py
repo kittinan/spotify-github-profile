@@ -5,11 +5,13 @@ import importlib
 login_module = importlib.import_module("login")
 callback_module = importlib.import_module("callback")
 view_module = importlib.import_module("view")
+ping_module = importlib.import_module("ping")
 
 login_handler = login_module.catch_all
 callback_handler = callback_module.catch_all
 view_handler = view_module.catch_all
 view_svg_handler = view_handler  # view.svg.py is identical to view.py
+ping_handler = ping_module.catch_all
 
 app = Flask(__name__)
 
@@ -41,6 +43,12 @@ def view(path):
 @app.route("/api/view.svg/<path:path>")
 def view_svg(path):
     return view_svg_handler(path)
+
+
+@app.route("/api/ping", defaults={"path": ""})
+@app.route("/api/ping/<path:path>")
+def ping(path):
+    return ping_handler(path)
 
 
 if __name__ == "__main__":
