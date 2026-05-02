@@ -4,6 +4,7 @@ from dotenv import load_dotenv, find_dotenv
 
 from util.firestore import get_firestore_db
 from util.profanity import profanity_check
+from util.remaster import remove_remaster
 
 load_dotenv(find_dotenv())
 
@@ -352,6 +353,7 @@ def catch_all(path):
     interchange = request.args.get("interchange", default="false") == "true"
     mode = request.args.get("mode", default="light")
     is_enable_profanity = request.args.get("profanity", default="false") == "true"
+    hide_remaster = request.args.get("hide_remaster", default="false") == "true"
 
     # Handle invalid request
     if not uid:
@@ -453,6 +455,10 @@ def catch_all(path):
     if is_enable_profanity:
         artist_name = profanity_check(artist_name)
         song_name = profanity_check(song_name)
+
+    # Strip remaster annotations from song title
+    if hide_remaster:
+        song_name = remove_remaster(song_name)
 
     if interchange:
         x = artist_name

@@ -105,6 +105,12 @@
             <span>Censor Profanity</span>
           </label>
         </div>
+        <div class="col s12 m3">
+          <label class="row">
+            <input type="checkbox" class="filled-in" id="hide-remaster-checkbox" />
+            <span>Hide Remaster</span>
+          </label>
+        </div>
       </div>
 
       <div class="row center">
@@ -237,7 +243,8 @@
       show_offline: false,
       background_color: "121212",
       interchange:false,
-      profanity: false
+      profanity: false,
+      hide_remaster: false
     };
     var openSong = false;
 
@@ -285,6 +292,11 @@
 
     $("#profanity-checkbox").change(function() {
       urlParams.profanity = this.checked;
+      updateUrl();
+    });
+
+    $("#hide-remaster-checkbox").change(function() {
+      urlParams.hide_remaster = this.checked;
       updateUrl();
     });
 
