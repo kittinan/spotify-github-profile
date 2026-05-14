@@ -1,15 +1,16 @@
-from flask import Flask, Response, jsonify, render_template, redirect, request
 from base64 import b64decode
-from dotenv import load_dotenv, find_dotenv
+
+from dotenv import find_dotenv, load_dotenv
+from flask import Flask, Response, jsonify, redirect, render_template, request
 
 load_dotenv(find_dotenv())
 
-from firebase_admin import credentials
-from firebase_admin import firestore
-import firebase_admin
-
-import os
 import json
+import os
+
+import firebase_admin
+from firebase_admin import credentials, firestore
+
 from util import spotify
 
 print("Starting Server")
@@ -36,9 +37,22 @@ def catch_all(path):
         return Response("not ok")
 
     token_info = spotify.generate_token(code)
+
+    if "access_token" not in token_info:
+        error = token_info.get("error", "unknown")
+        desc = token_info.get("error_description", "")
+        return Response(f"Token exchange failed: {error} - {desc}", status=400)
+
     access_token = token_info["access_token"]
 
-    spotify_user = spotify.get_user_profile(access_token)
+    profile_resp = spotify.get_user_profile_raw(access_token)
+    if profile_resp.status_code != 200 or not profile_resp.text.strip():
+        return Response(
+            f"Spotify profile fetch failed: HTTP {profile_resp.status_code} - {profile_resp.text[:300]}",
+            status=502,
+        )
+
+    spotify_user = profile_resp.json()
     user_id = spotify_user["id"]
 
     doc_ref = db.collection("users").document(user_id)
