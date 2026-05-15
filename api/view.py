@@ -21,6 +21,7 @@ import functools
 import colorgram
 import math
 import html
+import re
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -361,6 +362,9 @@ def catch_all(path):
     # Handle invalid request
     if not uid:
         return Response("not ok")
+    
+    if not re.match(r'^\d+$', border_radius):
+        border_radius = "10"
 
     try:
         item, is_now_playing, progress_ms, duration_ms = get_song_info(
