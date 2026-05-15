@@ -11,6 +11,6 @@ gunicorn==23.0.0
 profanityfilter==2.1.0
 
 # Test dependencies for CI/CD
-pytest==8.4.2
+pytest==9.0.3
 pytest-mock==3.15.1
 pytest-cov==6.0.0
