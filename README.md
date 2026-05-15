@@ -12,17 +12,17 @@ Vercel change the package the free tier is not enough for our usage. I moved ser
 
 Please replace your old endpoint `https://spotify-github-profile.vercel.app` to `https://spotify-github-profile.kittinanx.com`
 
-## Table of Contents  
-[Connect And Grant Permission](#connect-and-grant-permission)  
-[Example](#example)  
-[Running for development locally](#running-for-development-locally)  
-[Setting up Vercel](#setting-up-vercel)  
-[Setting up Firebase](#setting-up-firebase)  
-[Setting up Spotify dev](#setting-up-spotify-dev)  
-[Running locally](#running-locally)  
-[How to Contribute](#how-to-contribute)  
-[Known Bugs](#known-bugs)  
-[Features in Progress](#features-in-progress)  
+## Table of Contents
+[Connect And Grant Permission](#connect-and-grant-permission)
+[Example](#example)
+[Customization](#customization)
+[Running for development locally](#running-for-development-locally)
+[Setting up Vercel](#setting-up-vercel)
+[Setting up Firebase](#setting-up-firebase)
+[Setting up Spotify dev](#setting-up-spotify-dev)
+[Running locally](#running-locally)
+[How to Contribute](#how-to-contribute)
+[Known Bugs](#known-bugs)
 [Credit](#credit)  
 
 ## Connect And Grant Permission
@@ -56,6 +56,28 @@ Please replace your old endpoint `https://spotify-github-profile.vercel.app` to 
 - Spotify Embed theme (NEW!)
 
 ![spotify-github-profile](/img/spotify-embed.svg)
+
+## Customization
+
+You can customize the appearance by adding query parameters to your URL:
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `theme` | Theme to use (`default`, `compact`, `natemoo-re`, `novatorem`, `karaoke`, `spotify-embed`, `apple`) | `default` |
+| `background_color` | Background color (hex without #) | `121212` |
+| `border_radius` | Border radius in pixels | `10` |
+| `bar_color` | Equalizer bar color (hex without #) | `53b14f` |
+| `bar_color_cover` | Extract bar color from album cover (`true`/`false`) | `false` |
+| `cover_image` | Show album cover image (`true`/`false`) | `true` |
+| `show_offline` | Show offline status when not playing (`true`/`false`) | `false` |
+| `interchange` | Swap artist and song name positions (`true`/`false`) | `false` |
+| `mode` | Color mode for supported themes (`light`/`dark`) | `light` |
+
+### Example
+
+```
+https://spotify-github-profile.kittinanx.com/api/view?uid=YOUR_UID&cover_image=true&theme=default&border_radius=15&bar_color=53b14f
+```
 
 ## Running for development locally without Vercel
 
