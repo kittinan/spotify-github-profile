@@ -173,38 +173,42 @@ class TestRealCallbackIntegration:
                 pytest.skip("Cannot import callback module due to dependencies")
     
     @patch('api.callback.db')
-    @patch('util.spotify.get_user_profile')
+    @patch('util.spotify.get_user_profile_raw')
     @patch('util.spotify.generate_token')
     @patch('util.spotify.BASE_URL', 'http://localhost:5000')
-    def test_successful_integration_callback(self, mock_generate_token, mock_get_user_profile, mock_db, real_app_client):
+    def test_successful_integration_callback(self, mock_generate_token, mock_get_user_profile_raw, mock_db, real_app_client):
         """Test successful callback integration with all components."""
         # Mock Spotify API responses
         mock_generate_token.return_value = {
             "access_token": "test_access_token",
-            "refresh_token": "test_refresh_token", 
+            "refresh_token": "test_refresh_token",
             "expires_in": 3600
         }
-        
-        mock_get_user_profile.return_value = {
+
+        mock_profile_response = MagicMock()
+        mock_profile_response.status_code = 200
+        mock_profile_response.text = '{"id": "test_user_123", "display_name": "Test User"}'
+        mock_profile_response.json.return_value = {
             "id": "test_user_123",
             "display_name": "Test User"
         }
-        
+        mock_get_user_profile_raw.return_value = mock_profile_response
+
         # Mock Firestore
         mock_collection = MagicMock()
         mock_document = MagicMock()
         mock_db.collection.return_value = mock_collection
         mock_collection.document.return_value = mock_document
-        
+
         # Make request with authorization code
         response = real_app_client.get("/?code=test_auth_code")
-        
+
         # Verify response
         assert response.status_code == 200
-        
+
         # Verify Spotify API calls
         mock_generate_token.assert_called_once_with("test_auth_code")
-        mock_get_user_profile.assert_called_once_with("test_access_token")
+        mock_get_user_profile_raw.assert_called_once_with("test_access_token")
         
         # Verify Firestore operations
         mock_db.collection.assert_called_once_with("users")

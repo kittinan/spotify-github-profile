@@ -437,8 +437,8 @@ def test_make_svg_progress_data_handling(mock_make_svg, mock_get_song_info, clie
     
     # Verify progress data was passed to make_svg
     args, kwargs = mock_make_svg.call_args
-    progress_ms = args[10]  # progress_ms parameter
-    duration_ms = args[11]  # duration_ms parameter
+    progress_ms = args[11]  # progress_ms parameter (index 10 is border_radius)
+    duration_ms = args[12]  # duration_ms parameter
     assert progress_ms == 120000
     assert duration_ms == 240000
 
