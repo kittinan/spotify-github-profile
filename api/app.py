@@ -1,5 +1,12 @@
-from flask import Flask, redirect
 import importlib
+import os
+import sys
+
+from flask import Flask, redirect
+
+# Ensure the api/ directory is on sys.path so sibling modules resolve correctly
+# when running as a Vercel serverless function.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import legacy handlers (order matters for Firebase init)
 login_module = importlib.import_module("login")

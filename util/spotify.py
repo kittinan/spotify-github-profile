@@ -1,13 +1,14 @@
 from base64 import b64encode
 
-from dotenv import load_dotenv, find_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
 
-import requests
 import json
 import os
 import random
+
+import requests
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_SECRET_ID = os.getenv("SPOTIFY_SECRET_ID")
@@ -25,14 +26,17 @@ SPOTIFY_URL_RECENTLY_PLAY = (
 SPOTIFY_URL_GENERATE_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_URL_USER_INFO = "https://api.spotify.com/v1/me"
 
+
 class InvalidTokenError(Exception):
     pass
+
 
 def get_authorization():
 
     return b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_SECRET_ID}".encode()).decode(
         "ascii"
     )
+
 
 def generate_token(authorization_code):
 
@@ -49,6 +53,7 @@ def generate_token(authorization_code):
 
     return response_json
 
+
 def refresh_token(refresh_token):
 
     data = {
@@ -63,6 +68,13 @@ def refresh_token(refresh_token):
 
     return response_json
 
+
+def get_user_profile_raw(access_token):
+    """Return the raw Response object for flexible error handling by callers."""
+    headers = {"Authorization": f"Bearer {access_token}"}
+    return requests.get(SPOTIFY_URL_USER_INFO, headers=headers)
+
+
 def get_user_profile(access_token):
 
     headers = {"Authorization": f"Bearer {access_token}"}
@@ -71,6 +83,7 @@ def get_user_profile(access_token):
     response_json = response.json()
 
     return response_json
+
 
 def get_recently_play(access_token):
 
@@ -83,6 +96,7 @@ def get_recently_play(access_token):
 
     response_json = response.json()
     return response_json
+
 
 def get_now_playing(access_token):
 
