@@ -6,7 +6,10 @@ from flask import Flask, redirect
 
 # Ensure the api/ directory is on sys.path so sibling modules resolve correctly
 # when running as a Vercel serverless function.
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+_api_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _api_dir)
+# Also add the repo root so top-level packages like util/ resolve.
+sys.path.insert(0, os.path.dirname(_api_dir))
 
 # Import legacy handlers (order matters for Firebase init)
 login_module = importlib.import_module("login")
