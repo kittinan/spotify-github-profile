@@ -324,6 +324,20 @@
         delete urlParams.mode;
       }
 
+      // spotify-embed uses background_color directly, so keep its default
+      // background in sync with the selected mode instead of leaving the
+      // form's generic 121212 default in place.
+      if (this.value === 'spotify-embed') {
+        var embedBg = $('#mode-select').val() === 'dark' ? '181818' : 'ffffff';
+        urlParams.background_color = embedBg;
+        $('#background_color').val('#' + embedBg);
+      } else if (urlParams.theme === 'spotify-embed') {
+        // Leaving spotify-embed: restore the app's normal default instead
+        // of leaking its mode-derived background into other themes.
+        urlParams.background_color = '121212';
+        $('#background_color').val('#121212');
+      }
+
       urlParams.theme = this.value;
       updateUrl();
     });
@@ -350,6 +364,13 @@
       } else {
         delete urlParams.mode;
       }
+
+      if (themeSelected === 'spotify-embed') {
+        var embedBg = this.value === 'dark' ? '181818' : 'ffffff';
+        urlParams.background_color = embedBg;
+        $('#background_color').val('#' + embedBg);
+      }
+
       updateUrl();
     });
  

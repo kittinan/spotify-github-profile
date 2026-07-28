@@ -310,7 +310,7 @@ def get_song_info(uid, show_offline):
 
     data = spotify.get_now_playing(access_token)
 
-    if data:
+    if data and data.get("item"):
         item = data["item"]
         item["currently_playing_type"] = data["currently_playing_type"]
         is_now_playing = True
@@ -415,9 +415,17 @@ def catch_all(path):
     if cover_image:
 
         if currently_playing_type == "track":
-            img = load_image(item["album"]["images"][1]["url"])
+            images = item.get("album", {}).get("images") or []
+            if len(images) > 1:
+                img = load_image(images[1]["url"])
+            elif images:
+                img = load_image(images[0]["url"])
         elif currently_playing_type == "episode":
-            img = load_image(item["images"][1]["url"])
+            images = item.get("images") or []
+            if len(images) > 1:
+                img = load_image(images[1]["url"])
+            elif images:
+                img = load_image(images[0]["url"])
 
         # Only convert to base64 if image was successfully loaded
         if img is not None:
