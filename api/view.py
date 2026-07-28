@@ -310,7 +310,7 @@ def get_song_info(uid, show_offline):
 
     data = spotify.get_now_playing(access_token)
 
-    if data:
+    if data and data.get("item"):
         item = data["item"]
         item["currently_playing_type"] = data["currently_playing_type"]
         is_now_playing = True
