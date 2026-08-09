@@ -1,17 +1,16 @@
-from base64 import b64decode
-
-from dotenv import find_dotenv, load_dotenv
-from flask import Flask, Response, jsonify, redirect, render_template, request
-
-load_dotenv(find_dotenv())
-
+import hmac
 import json
 import os
+from base64 import b64decode
 
 import firebase_admin
+from dotenv import find_dotenv, load_dotenv
 from firebase_admin import credentials, firestore
+from flask import Flask, Response, make_response, render_template, request
 
 from util import spotify
+
+load_dotenv(find_dotenv())
 
 print("Starting Server")
 
@@ -27,30 +26,71 @@ db = firestore.client()
 app = Flask(__name__)
 
 
+def _clear_oauth_state_cookie(response):
+    response.delete_cookie(spotify.OAUTH_STATE_COOKIE_NAME, path="/")
+    return response
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
-    code = request.args.get("code")
+    state = request.args.get("state")
+    expected_state = request.cookies.get(spotify.OAUTH_STATE_COOKIE_NAME)
+    if (
+        not state
+        or not expected_state
+        or not hmac.compare_digest(state, expected_state)
+    ):
+        return Response("Invalid OAuth state", status=400, mimetype="text/plain")
 
-    if code is None:
-        # TODO: no code
-        return Response("not ok")
+    oauth_error = request.args.get("error")
+    if oauth_error:
+        response = Response(
+            f"Spotify authorization failed: {oauth_error}",
+            status=400,
+            mimetype="text/plain",
+        )
+        return _clear_oauth_state_cookie(response)
+
+    code = request.args.get("code")
+    if not code:
+        response = Response(
+            "Missing authorization code", status=400, mimetype="text/plain"
+        )
+        return _clear_oauth_state_cookie(response)
 
     token_info = spotify.generate_token(code)
 
     if "access_token" not in token_info:
         error = token_info.get("error", "unknown")
         desc = token_info.get("error_description", "")
-        return Response(f"Token exchange failed: {error} - {desc}", status=400)
+        response = Response(
+            f"Token exchange failed: {error} - {desc}",
+            status=400,
+            mimetype="text/plain",
+        )
+        return _clear_oauth_state_cookie(response)
+
+    try:
+        token_info = spotify.normalize_token_info(token_info)
+    except ValueError:
+        response = Response(
+            "Token exchange returned invalid token metadata",
+            status=502,
+            mimetype="text/plain",
+        )
+        return _clear_oauth_state_cookie(response)
 
     access_token = token_info["access_token"]
 
     profile_resp = spotify.get_user_profile_raw(access_token)
     if profile_resp.status_code != 200 or not profile_resp.text.strip():
-        return Response(
+        response = Response(
             f"Spotify profile fetch failed: HTTP {profile_resp.status_code} - {profile_resp.text[:300]}",
             status=502,
+            mimetype="text/plain",
         )
+        return _clear_oauth_state_cookie(response)
 
     spotify_user = profile_resp.json()
     user_id = spotify_user["id"]
@@ -63,7 +103,8 @@ def catch_all(path):
         "BASE_URL": spotify.BASE_URL,
     }
 
-    return render_template("callback.html.j2", **rendered_data)
+    response = make_response(render_template("callback.html.j2", **rendered_data))
+    return _clear_oauth_state_cookie(response)
 
 
 if __name__ == "__main__":

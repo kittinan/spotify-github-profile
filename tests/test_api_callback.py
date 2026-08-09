@@ -48,7 +48,7 @@ def test_callback_with_code(client):
 
 
 def test_callback_with_empty_code_param(client):
-    """Test callback with empty code parameter."""
+    """Test callback with empty authorization code parameter."""
     response = client.get("/?code=")
     
     # Empty string should be processed (though would fail in real Spotify auth)
@@ -97,7 +97,7 @@ def test_multiple_query_parameters(client):
     "UPPERCASE_CODE"
 ])
 def test_special_code_values(client, code):
-    """Test callback with special authorization code values."""
+    """Test callback with special code values."""
     response = client.get(f"/?code={code}")
     
     assert response.status_code == 200
@@ -200,11 +200,16 @@ class TestRealCallbackIntegration:
         mock_db.collection.return_value = mock_collection
         mock_collection.document.return_value = mock_document
 
-        # Make request with authorization code
-        response = real_app_client.get("/?code=test_auth_code")
+        # Make request with a matching OAuth state cookie/query pair.
+        real_app_client.set_cookie("spotify_oauth_state", "test_state")
+        with patch('util.spotify.time', return_value=1000):
+            response = real_app_client.get(
+                "/?code=test_auth_code&state=test_state"
+            )
 
         # Verify response
         assert response.status_code == 200
+        assert "spotify_oauth_state=;" in response.headers.get("Set-Cookie", "")
 
         # Verify Spotify API calls
         mock_generate_token.assert_called_once_with("test_auth_code")
@@ -216,21 +221,51 @@ class TestRealCallbackIntegration:
         mock_document.set.assert_called_once_with({
             "access_token": "test_access_token",
             "refresh_token": "test_refresh_token",
-            "expires_in": 3600
+            "expires_in": 3600,
+            "expired_ts": 4600
         })
+
+    def test_integration_callback_rejects_missing_or_mismatched_state(self, real_app_client):
+        """OAuth callback must be bound to the browser that started the flow."""
+        response = real_app_client.get("/?code=test_code&state=test_state")
+        assert response.status_code == 400
+        assert response.data == b"Invalid OAuth state"
+
+        real_app_client.set_cookie("spotify_oauth_state", "expected_state")
+        response = real_app_client.get("/?code=test_code&state=wrong_state")
+        assert response.status_code == 400
+        assert response.data == b"Invalid OAuth state"
+
+    @patch('util.spotify.generate_token')
+    def test_integration_callback_handles_access_denied(self, mock_generate_token, real_app_client):
+        """A denied authorization should end the state-bound flow without token exchange."""
+        real_app_client.set_cookie("spotify_oauth_state", "test_state")
+
+        response = real_app_client.get(
+            "/?error=access_denied&state=test_state"
+        )
+
+        assert response.status_code == 400
+        assert response.data == b"Spotify authorization failed: access_denied"
+        assert "spotify_oauth_state=;" in response.headers.get("Set-Cookie", "")
+        mock_generate_token.assert_not_called()
     
     def test_integration_callback_without_code(self, real_app_client):
-        """Test integration callback without authorization code."""
-        response = real_app_client.get("/")
+        """A valid state without a code or OAuth error should fail clearly."""
+        real_app_client.set_cookie("spotify_oauth_state", "test_state")
+
+        response = real_app_client.get("/?state=test_state")
         
-        assert response.status_code == 200
-        assert response.data == b"not ok"
+        assert response.status_code == 400
+        assert response.data == b"Missing authorization code"
+        assert "spotify_oauth_state=;" in response.headers.get("Set-Cookie", "")
     
     @patch('util.spotify.generate_token')
     def test_integration_spotify_error_handling(self, mock_generate_token, real_app_client):
         """Test integration error handling for Spotify API failures."""
         # Mock token generation to raise an exception
         mock_generate_token.side_effect = Exception("Token generation failed")
+        real_app_client.set_cookie("spotify_oauth_state", "test_state")
         
         with pytest.raises(Exception, match="Token generation failed"):
-            real_app_client.get("/?code=test_code")
+            real_app_client.get("/?code=test_code&state=test_state")
