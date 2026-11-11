@@ -402,7 +402,7 @@ def catch_all(path):
             duration_ms,
         )
         resp = Response(svg, mimetype="image/svg+xml")
-        resp.headers["Cache-Control"] = "s-maxage=1"
+        resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=10, stale-while-revalidate=3600"
         return resp
 
     currently_playing_type = item.get("currently_playing_type", "track")
@@ -490,7 +490,7 @@ def catch_all(path):
     )
 
     resp = Response(svg, mimetype="image/svg+xml")
-    resp.headers["Cache-Control"] = "s-maxage=1"
+    resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=10, stale-while-revalidate=3600"
 
     print("cache size:", getsizeof(CACHE_TOKEN_INFO))
 
