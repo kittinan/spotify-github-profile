@@ -44,7 +44,7 @@ def test_catch_all_with_valid_uid_offline(mock_make_svg, mock_get_song_info, cli
     
     assert response.status_code == 200
     assert response.mimetype == 'image/svg+xml'
-    assert response.headers['Cache-Control'] == 's-maxage=1'
+    assert response.headers['Cache-Control'] == 'public, max-age=0, s-maxage=10, stale-while-revalidate=3600'
     
     # Verify make_svg was called with offline parameters
     mock_make_svg.assert_called_once()
@@ -74,7 +74,7 @@ def test_catch_all_with_valid_uid_now_playing(mock_make_svg, mock_get_song_info,
         
         assert response.status_code == 200
         assert response.mimetype == 'image/svg+xml'
-        assert response.headers['Cache-Control'] == 's-maxage=1'
+        assert response.headers['Cache-Control'] == 'public, max-age=0, s-maxage=10, stale-while-revalidate=3600'
         
         # Verify make_svg was called with correct parameters
         mock_make_svg.assert_called_once()
