@@ -58,29 +58,29 @@
       }
 
       #bars {
-        height: 30px;
+        display: flex;
+        align-items: flex-end;
+        height: 29px;
         margin: -29px 0 0 0px;
-        position: absolute;
-        width: 40px;
       }
 
       .bar {
         background: #{{bar_color|safe}};
-        bottom: 1px;
+        flex: none;
         height: 3px;
-        position: absolute;
+        margin-left: 1px;
         width: 3px;
         animation: sound 0ms -800ms linear infinite alternate;
       }
 
       @keyframes sound {
         0% {
-          opacity: .35;
+          background: color-mix(in srgb, #{{bar_color|safe}} 35%, transparent);
           height: 3px;
         }
 
         100% {
-          opacity: 1;
+          background: #{{bar_color|safe}};
           height: 22px;
         }
       }
