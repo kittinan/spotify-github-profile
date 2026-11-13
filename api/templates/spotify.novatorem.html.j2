@@ -97,54 +97,57 @@
         content: '\00a0';
       }
 
-      .scrolling {
-        {# animation: marquee 8s linear infinite;
-        display: block;
-        min-width: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        white-space: nowrap; #}
+      .song-track {
+        display: inline-flex;
+        width: max-content;
+      }
 
-        animation: marquee 8s linear infinite;
-        display: inline-block;
+      .scrolling {
+        flex: none;
         padding-right: 20px;
       }
 
+      .scrolling:first-child {
+        animation: marquee 8s linear infinite;
+      }
+
+      /* Percentages resolve against .song-track, which holds three copies,
+         so a third of it is exactly one copy. */
       @keyframes marquee {
         from {
-          transform: translateX(0);
+          margin-left: 0;
         }
         to {
-          transform: translateX(-100%);
+          margin-left: -33.3333%;
         }
       }
 
       #bars {
-        position: absolute;
-        height: 14px;
+        display: flex;
+        align-items: flex-end;
+        height: 13px;
         width: 200px;
         overflow: hidden;
-        margin: -14px 0 0 0px;
+        margin: -14px 0 1px 0px;
       }
 
       .bar {
         background: #{{bar_color|safe}};
-        bottom: 1px;
+        flex: none;
         height: 3px;
-        position: absolute;
+        margin: 0 1px;
         width: 2px;
         animation: sound 0ms -800ms linear infinite alternate;
       }
 
       @keyframes sound {
         0% {
-          opacity: .35;
+          background: color-mix(in srgb, #{{bar_color|safe}} 35%, transparent);
           height: 3px;
         }
 
         100% {
-          opacity: 1;
+          background: #{{bar_color|safe}};
           height: 14px;
         }
       }
@@ -161,9 +164,11 @@
         <div class="text-container">
           <div class="artist">{{artist_name}}</div>
           <div class="song-container">
-            <div class="song scrolling">{{song_name}}</div>
-            <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
-            <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
+            <div class="song-track">
+              <div class="song scrolling">{{song_name}}</div>
+              <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
+              <div class="song scrolling" aria-hidden="true">{{song_name}}</div>
+            </div>
           </div>
           <div id='bars'>{{content_bar|safe}}</div>
         </div>
